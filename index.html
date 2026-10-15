@@ -292,6 +292,8 @@ dialog::backdrop{background:rgba(10,20,30,.55)}
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DIA = 864e5;
+// Mes del viaje: los calendarios solo muestran estas fechas
+const FECHA_MIN = '2027-05-01', FECHA_MAX = '2027-05-31';
 const fd = s => { if (!s) return null; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
 const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const dias = (a, b) => Math.round((fd(b) - fd(a)) / DIA);
@@ -387,7 +389,7 @@ const TIPOS = {
     { k: 'monto', l: 'Monto', t: 'number', req: 1 },
     { k: 'moneda', l: 'Moneda', def: () => monedaBase() },
     { k: 'pagadoPor', l: 'Pagó', t: 'select', op: () => viajeros().length ? viajeros() : ['—'], def: () => st.yo },
-    { k: 'fecha', l: 'Fecha', t: 'date', def: () => iso(new Date()) },
+    { k: 'fecha', l: 'Fecha', t: 'date', libre: 1, def: () => iso(new Date()) },
     { k: 'categoria', l: 'Categoría', t: 'select', op: ['Alojamiento', 'Transporte', 'Comida', 'Actividades', 'Compras', 'Seguros y trámites', 'Otros'] },
     { k: 'compartido', l: '¿Se divide entre los dos?', t: 'select', op: ['Sí', 'No'] },
   ]},
@@ -1123,7 +1125,7 @@ function campoHTML(c, v) {
     const todas = val && !ops.includes(val) ? [...ops, val] : ops;
     input = `<select id="${id}" name="${c.k}">${todas.map(o => `<option ${o === val ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
   } else {
-    input = `<input id="${id}" name="${c.k}" type="${c.t || 'text'}" value="${esc(val)}" placeholder="${esc(c.ph || '')}" ${c.t === 'number' ? 'step="any" inputmode="decimal"' : ''} ${c.req ? 'required' : ''} ${c.lista ? `list="dl_${c.k}" autocomplete="off"` : ''}>`;
+    input = `<input id="${id}" name="${c.k}" type="${c.t || 'text'}" value="${esc(val)}" placeholder="${esc(c.ph || '')}" ${c.t === 'number' ? 'step="any" inputmode="decimal"' : ''} ${c.req ? 'required' : ''} ${c.t === 'date' && !c.libre ? `min="${FECHA_MIN}" max="${FECHA_MAX}"` : ''} ${c.t === 'datetime-local' ? `min="${FECHA_MIN}T00:00" max="${FECHA_MAX}T23:59"` : ''} ${c.lista ? `list="dl_${c.k}" autocomplete="off"` : ''}>`;
     if (c.lista) input += `<datalist id="dl_${c.k}">${[...new Set(etapasOrd().map(e => e.datos.ciudad).filter(Boolean))].map(x => `<option value="${esc(x)}">`).join('')}</datalist>`;
   }
   return `<label class="campo ${c.ancho ? 'ancho' : ''}" for="${id}"><span>${esc(c.l)}</span>${input}</label>`;
