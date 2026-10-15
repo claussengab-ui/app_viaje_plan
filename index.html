@@ -388,7 +388,7 @@ const plural = (n, a, b) => n + ' ' + (n === 1 ? a : b);
 function toast(msg, error = false) {
   document.querySelectorAll('.toast').forEach(t => t.remove());
   const t = document.createElement('div'); t.className = 'toast' + (error ? ' error' : ''); t.textContent = msg;
-  document.body.appendChild(t); setTimeout(() => t.remove(), error ? 5000 : 2200);
+  document.body.appendChild(t); setTimeout(() => t.remove(), error ? 5000 : msg.length > 40 ? 4500 : 2200);
 }
 function guardarLocal(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} }
 function leerLocal(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -430,7 +430,7 @@ const TIPOS = {
   alojamiento: { singular: 'alojamiento', campos: [
     { k: 'nombre', l: 'Nombre', req: 1, ancho: 1, ph: 'Ej: Casa da Sé (Airbnb)' },
     { k: 'enlace', l: 'Enlace del alojamiento', t: 'url', ancho: 1, ph: 'Pega aquí el link de Booking, Airbnb, etc.' },
-    { k: 'ciudad', l: 'Destino', lista: 1, ph: 'Elige o escribe la ciudad' },
+    { k: 'ciudad', l: 'Ciudad (si no existe, se crea el destino solo)', lista: 1, req: 1, ancho: 1, ph: 'Ej: Lisboa' },
     { k: 'estado', l: 'Estado', t: 'select', op: ['Evaluando', 'Reservado', 'Pagado', 'Descartado'] },
     { k: 'entrada', l: 'Check-in (día)', t: 'date' },
     { k: 'horaEntrada', l: 'Check-in (hora)', t: 'time', ph: '15:00' },
@@ -557,7 +557,7 @@ async function geocodificar(q) {
     const j = await r.json();
     if (!j[0]) return null;
     const lat = +j[0].lat, lng = +j[0].lon;
-    return { lat, lng, nombre: j[0].display_name.split(',').slice(0, 3).join(',').trim(), tz: zonaDe(j[0].address?.country_code, lat, lng) };
+    return { lat, lng, nombre: j[0].display_name.split(',').slice(0, 3).join(',').trim(), tz: zonaDe(j[0].address?.country_code, lat, lng), pais: j[0].address?.country || '' };
   } catch { return null; }
 }
 
@@ -1057,6 +1057,41 @@ function dibujarMapaDestino() {
   else if (u?.lat) mapa.setView([u.lat, u.lng], 12);
   else mapa.setView([-20, -40], 2);
   setTimeout(() => mapa?.invalidateSize(), 50);
+}
+
+// ---------- Alojamiento → destino automático ----------
+// Busca el destino de esa ciudad que calce con las fechas (o queda pegado a ellas)
+function destinoParaAlojamiento(a) {
+  return etapasOrd().find(e => normal(e.datos.ciudad) === normal(a.ciudad) && e.datos.llegada && e.datos.salida &&
+    a.entrada <= iso(new Date(fd(e.datos.salida).getTime() + DIA)) && a.salida >= iso(new Date(fd(e.datos.llegada).getTime() - DIA)));
+}
+async function sincronizarDestino(a, silencioso) {
+  const { ciudad, entrada, salida, estado } = a;
+  if (!ciudad || !entrada || !salida || estado === 'Descartado' || salida <= entrada) return '';
+  const e = destinoParaAlojamiento(a);
+  if (!e) {
+    const g = await geocodificar(ciudad);
+    const datos = { ciudad: ciudad.trim(), pais: g?.pais || '', llegada: entrada, salida, auto: true,
+      ubicacion: g ? { q: ciudad, lat: g.lat, lng: g.lng, nombre: g.nombre, tz: g.tz } : { q: ciudad, lat: null, lng: null, nombre: '' } };
+    return (await guardar('etapa', datos)) ? `Se creó el destino ${ciudad.trim()} en el recorrido y el calendario. Ahí pueden agregar sus panoramas.` : '';
+  }
+  // solo un alojamiento reservado (o un destino creado solo) mueve las fechas del destino
+  if (!(estado === 'Reservado' || estado === 'Pagado' || e.datos.auto)) return '';
+  const llegada = entrada < e.datos.llegada ? entrada : e.datos.llegada, sal = salida > e.datos.salida ? salida : e.datos.salida;
+  if (llegada === e.datos.llegada && sal === e.datos.salida) return '';
+  await guardar('etapa', { ...e.datos, llegada, salida: sal }, e.id);
+  return `Las fechas de ${e.datos.ciudad} se ajustaron: ${fFecha(llegada)} a ${fFecha(sal)}.`;
+}
+// Al abrir la app: crea los destinos que falten para alojamientos ya guardados
+async function sincronizarTodo() {
+  const creados = [];
+  for (const a of alojActivos().sort((x, y) => (x.datos.entrada || '').localeCompare(y.datos.entrada || ''))) {
+    if (a.datos.ciudad && a.datos.entrada && a.datos.salida && !destinoParaAlojamiento(a.datos)) {
+      const m = await sincronizarDestino(a.datos, true);
+      if (m) creados.push(a.datos.ciudad.trim());
+    }
+  }
+  if (creados.length) toast('Se crearon los destinos: ' + creados.join(', '));
 }
 
 // ---------- Días del viaje ----------
@@ -1589,7 +1624,11 @@ function prepararForm(form, tipo, item) {
       }
     }
     const ok = await guardar(tipo, final, item?.id);
-    if (ok) { if (form.closest('dialog')) $('#dlg').close(); toast(item ? 'Cambios guardados' : 'Agregado'); }
+    if (ok) {
+      if (form.closest('dialog')) $('#dlg').close();
+      const extra = tipo === 'alojamiento' ? await sincronizarDestino(final) : '';
+      toast(extra || (item ? 'Cambios guardados' : 'Agregado'));
+    }
     else if (btn) { btn.disabled = false; btn.textContent = item ? 'Guardar cambios' : 'Agregar'; }
   });
 }
@@ -1712,6 +1751,7 @@ async function iniciar() {
   if (error) { pantallaClave('No se pudieron cargar los datos: ' + error.message); return; }
   st.items = data || [];
   if (diasViaje().includes(iso(new Date()))) st.vista = 'hoy';
+  setTimeout(sincronizarTodo, 500);
   escucharCambios();
   if (!st.yo) pantallaQuienSoy(); else render();
 }
