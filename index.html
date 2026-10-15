@@ -217,6 +217,13 @@ main.ancho{max-width:none}
 .escala{font-size:.9rem;color:var(--suave);padding:2px 0 2px 14px;border-left:3px dotted var(--linea);margin-left:18px}
 .escala.justa{color:var(--alerta);font-weight:700}
 
+/* Horario del alojamiento */
+.horario-aloj{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:6px 0 2px}
+.horario-aloj>div{display:grid}
+.horario-aloj .der{text-align:right}
+.horario-aloj strong{font:800 1.4rem/1.1 'Bricolage Grotesque',sans-serif}
+.horario-aloj small{color:var(--suave);font-size:.82rem}
+
 /* Página de un destino */
 .dest-nav{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
 .dest-nav .sep{flex:1}
@@ -241,6 +248,75 @@ h4.cat{margin:14px 0 8px;font-size:1rem;color:var(--suave)}
 .ver-dest{margin-top:8px}
 .icono-medio.hecho{opacity:.5}
 .panel-mapa .estacion{padding-right:6px}
+
+/* Calendario */
+.cal-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:1000px){.cal-wrap{grid-template-columns:1fr}}
+.mes h3{text-transform:capitalize;margin-top:0}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal-sem{font-size:.8rem;color:var(--suave);text-align:center;padding-bottom:2px}
+.cal-dia{position:relative;min-height:84px;border:1.5px solid var(--linea);border-radius:12px;background:var(--superficie);padding:6px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer;text-align:left;overflow:hidden}
+.cal-dia[style]{background:color-mix(in srgb,var(--c) 20%,var(--superficie));border-color:color-mix(in srgb,var(--c) 45%,var(--linea))}
+.cal-dia.fuera{opacity:.45}
+.cal-dia.sel{outline:3px solid var(--texto);outline-offset:1px}
+.cal-dia.hoy .cd-num{background:var(--texto);color:var(--papel);border-radius:999px;padding:0 6px}
+.cd-num{font:800 1rem 'Bricolage Grotesque',sans-serif}
+.cd-ciudad{font-size:.72rem;font-weight:700;line-height:1.1;color:var(--texto);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cd-ico{margin-top:auto;font-size:.85rem;display:flex;flex-wrap:wrap;gap:2px;align-items:center}
+.cd-pan{font-size:.75rem;font-weight:700}
+@media (max-width:560px){.cal-dia{min-height:62px;padding:4px;border-radius:9px}.cd-ciudad{font-size:.62rem}.cd-ico{font-size:.7rem}}
+.cal-leyenda{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.chip-dest{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--linea);background:var(--superficie);border-radius:999px;padding:4px 12px;cursor:pointer;font-weight:700}
+.chip-dest i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+
+/* Detalle de un día */
+.dia-detalle{background:var(--superficie);border:1px solid var(--linea);border-top:6px solid var(--c);border-radius:18px;padding:18px 20px}
+.dia-cab{display:grid;gap:10px}
+.dia-cab p{margin:0;color:var(--suave)}
+.dia-cab h2{font-size:1.7rem;font-weight:800;text-transform:capitalize;margin:2px 0 4px}
+.destino-dia{font-weight:800;font-size:1.1rem;color:var(--texto)}
+.dia-extra,.dh-extra{display:grid;gap:4px;font-size:.93rem;color:var(--suave)}
+.dh-extra{color:inherit;opacity:.9;margin-top:8px}
+.dia-detalle h3.grupo{margin-top:20px}
+.aloj-dia{cursor:pointer}
+.enlaces{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.pendientes{margin-top:16px}
+.pendientes summary{cursor:pointer;font-weight:700;color:var(--mar)}
+.pendientes .plan-dia{margin-top:8px}
+
+/* Plan día a día */
+.plan{display:grid;gap:10px}
+.plan-dia{background:var(--superficie);border:1px solid var(--linea);border-radius:14px;padding:10px 12px;display:grid;gap:6px}
+.dia-detalle .plan-dia{background:var(--papel)}
+.pd-cab{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
+.pd-cab b{text-transform:capitalize}
+.pd-acc{display:flex;gap:14px}
+.pd-acc .enlace-titulo{color:var(--mar);font-weight:700;font-size:.9rem}
+.fila-pan{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--linea)}
+.fila-pan:first-of-type{border-top:0}
+.pd-cab+.fila-pan{border-top:1px solid var(--linea)}
+.fila-pan.hecha .fp-txt b{text-decoration:line-through;opacity:.6}
+.fp-ico{font-size:1.2rem}
+.fp-txt{flex:1;min-width:140px;cursor:pointer;display:grid}
+.fp-txt small{color:var(--suave)}
+.fp-acc{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select.mini{width:auto;padding:5px 8px;font-size:.88rem;border-radius:8px}
+.chips-dia{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chips-dia .pastilla{text-transform:capitalize}
+.barra{height:12px;border-radius:999px;background:var(--papel);overflow:hidden;margin-bottom:8px}
+.barra span{display:block;height:100%;border-radius:999px}
+
+/* Hoy */
+.proximo{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--cab);color:var(--cab-t);border-radius:18px;padding:16px 18px;margin-bottom:14px;cursor:pointer}
+.proximo .burbuja{background:rgba(255,255,255,.12)}
+.proximo div{display:grid}
+.proximo small{opacity:.75}
+.proximo b{font:800 1.2rem 'Bricolage Grotesque',sans-serif}
+.cuenta-prox{text-align:right}
+.cuenta-prox strong{font:800 1.7rem/1 'Bricolage Grotesque',sans-serif;color:var(--ruta)}
+.nav-dia{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0}
+.nav-dia .btn:disabled{opacity:.4;cursor:default}
+.nav-dia span{color:var(--suave);font-weight:700}
 
 /* Formularios */
 input,select,textarea{width:100%;background:var(--papel);border:1.5px solid var(--linea);border-radius:10px;padding:10px 12px}
@@ -294,6 +370,9 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const DIA = 864e5;
 // Mes del viaje: los calendarios solo muestran estas fechas
 const FECHA_MIN = '2027-05-01', FECHA_MAX = '2027-05-31';
+const ZONA_CASA = 'America/Santiago', NOMBRE_CASA = 'Chile';
+const PALETA = ['#E2A60E', '#1F7A99', '#C2412D', '#2A8253', '#8E5BC7', '#D9672E', '#3D6FD8', '#B5487A'];
+const MOMENTOS = ['Mañana', 'Tarde', 'Noche'];
 const fd = s => { if (!s) return null; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
 const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const dias = (a, b) => Math.round((fd(b) - fd(a)) / DIA);
@@ -345,6 +424,7 @@ const TIPOS = {
     { k: 'salida', l: 'Salida', t: 'date', req: 1 },
     { k: 'ubicacion', l: 'Ubicación en el mapa', t: 'geo', ancho: 1, auto: d => [d.ciudad, d.pais].filter(Boolean).join(', ') },
     { k: 'enlace', l: 'Enlace (opcional)', t: 'url', ancho: 1, ph: 'Pega aquí un enlace útil: guía, tour, entradas…' },
+    { k: 'presupuesto', l: 'Presupuesto para este destino (opcional)', t: 'number', ancho: 1, ph: 'En tu moneda principal' },
     { k: 'notas', l: 'Notas', t: 'textarea', ancho: 1 },
   ]},
   alojamiento: { singular: 'alojamiento', campos: [
@@ -352,8 +432,10 @@ const TIPOS = {
     { k: 'enlace', l: 'Enlace del alojamiento', t: 'url', ancho: 1, ph: 'Pega aquí el link de Booking, Airbnb, etc.' },
     { k: 'ciudad', l: 'Destino', lista: 1, ph: 'Elige o escribe la ciudad' },
     { k: 'estado', l: 'Estado', t: 'select', op: ['Evaluando', 'Reservado', 'Pagado', 'Descartado'] },
-    { k: 'entrada', l: 'Check-in', t: 'date' },
-    { k: 'salida', l: 'Check-out', t: 'date' },
+    { k: 'entrada', l: 'Check-in (día)', t: 'date' },
+    { k: 'horaEntrada', l: 'Check-in (hora)', t: 'time', ph: '15:00' },
+    { k: 'salida', l: 'Check-out (día)', t: 'date' },
+    { k: 'horaSalida', l: 'Check-out (hora)', t: 'time', ph: '11:00' },
     { k: 'precio', l: 'Precio total', t: 'number' },
     { k: 'moneda', l: 'Moneda', def: () => monedaBase() },
     { k: 'codigo', l: 'Código de reserva' },
@@ -380,6 +462,10 @@ const TIPOS = {
     { k: 'nombre', l: 'Qué', req: 1, ancho: 1, ph: 'Ej: Torre de Belém' },
     { k: 'ciudad', l: 'Destino', lista: 1, ph: 'Elige o escribe la ciudad' },
     { k: 'categoria', l: 'Tipo', t: 'select', op: ['Ver', 'Comer', 'Hacer', 'Naturaleza', 'Noche', 'Comprar'] },
+    { k: 'dia', l: 'Qué día (opcional)', t: 'select', op: () => opcionesDias() },
+    { k: 'momento', l: 'Momento del día', t: 'select', op: ['', ...MOMENTOS] },
+    { k: 'precio', l: 'Precio (opcional, para los dos)', t: 'number' },
+    { k: 'moneda', l: 'Moneda', def: () => monedaBase() },
     { k: 'enlace', l: 'Enlace', t: 'url', ancho: 1, ph: 'https://' },
     { k: 'ubicacion', l: 'Ubicación en el mapa', t: 'geo', ancho: 1, auto: d => [d.nombre, d.ciudad].filter(Boolean).join(', ') },
     { k: 'notas', l: 'Notas', t: 'textarea', ancho: 1 },
@@ -388,6 +474,7 @@ const TIPOS = {
     { k: 'concepto', l: 'Concepto', req: 1, ancho: 1, ph: 'Ej: Seguro de viaje' },
     { k: 'monto', l: 'Monto', t: 'number', req: 1 },
     { k: 'moneda', l: 'Moneda', def: () => monedaBase() },
+    { k: 'destino', l: 'Destino (opcional)', lista: 1, ph: 'Elige la ciudad' },
     { k: 'pagadoPor', l: 'Pagó', t: 'select', op: () => viajeros().length ? viajeros() : ['—'], def: () => st.yo },
     { k: 'fecha', l: 'Fecha', t: 'date', libre: 1, def: () => iso(new Date()) },
     { k: 'categoria', l: 'Categoría', t: 'select', op: ['Alojamiento', 'Transporte', 'Comida', 'Actividades', 'Compras', 'Seguros y trámites', 'Otros'] },
@@ -466,11 +553,146 @@ async function borrar(id) {
 async function geocodificar(q) {
   if (!q) return null;
   try {
-    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=es&q=' + encodeURIComponent(q));
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&accept-language=es&q=' + encodeURIComponent(q));
     const j = await r.json();
     if (!j[0]) return null;
-    return { lat: +j[0].lat, lng: +j[0].lon, nombre: j[0].display_name.split(',').slice(0, 3).join(',').trim() };
+    const lat = +j[0].lat, lng = +j[0].lon;
+    return { lat, lng, nombre: j[0].display_name.split(',').slice(0, 3).join(',').trim(), tz: zonaDe(j[0].address?.country_code, lat, lng) };
   } catch { return null; }
+}
+
+
+/* ---------- Hora local ---------- */
+const ZONA_PAIS = {
+  es:'Europe/Madrid', pt:'Europe/Lisbon', fr:'Europe/Paris', it:'Europe/Rome', de:'Europe/Berlin', nl:'Europe/Amsterdam', be:'Europe/Brussels',
+  ch:'Europe/Zurich', at:'Europe/Vienna', gb:'Europe/London', ie:'Europe/Dublin', gr:'Europe/Athens', tr:'Europe/Istanbul', cz:'Europe/Prague',
+  pl:'Europe/Warsaw', hu:'Europe/Budapest', hr:'Europe/Zagreb', si:'Europe/Ljubljana', sk:'Europe/Bratislava', dk:'Europe/Copenhagen',
+  se:'Europe/Stockholm', no:'Europe/Oslo', fi:'Europe/Helsinki', is:'Atlantic/Reykjavik', ro:'Europe/Bucharest', bg:'Europe/Sofia',
+  rs:'Europe/Belgrade', ba:'Europe/Sarajevo', me:'Europe/Podgorica', al:'Europe/Tirane', mk:'Europe/Skopje', ee:'Europe/Tallinn', lv:'Europe/Riga',
+  lt:'Europe/Vilnius', mt:'Europe/Malta', cy:'Asia/Nicosia', lu:'Europe/Luxembourg', mc:'Europe/Monaco', va:'Europe/Rome', sm:'Europe/Rome',
+  ad:'Europe/Andorra', ma:'Africa/Casablanca', eg:'Africa/Cairo', za:'Africa/Johannesburg', ke:'Africa/Nairobi', tz:'Africa/Dar_es_Salaam',
+  ae:'Asia/Dubai', qa:'Asia/Qatar', il:'Asia/Jerusalem', jo:'Asia/Amman', in:'Asia/Kolkata', th:'Asia/Bangkok', vn:'Asia/Ho_Chi_Minh',
+  kh:'Asia/Phnom_Penh', sg:'Asia/Singapore', my:'Asia/Kuala_Lumpur', ph:'Asia/Manila', jp:'Asia/Tokyo', kr:'Asia/Seoul', cn:'Asia/Shanghai',
+  hk:'Asia/Hong_Kong', tw:'Asia/Taipei', nz:'Pacific/Auckland', cl:'America/Santiago', ar:'America/Argentina/Buenos_Aires', uy:'America/Montevideo',
+  py:'America/Asuncion', bo:'America/La_Paz', pe:'America/Lima', co:'America/Bogota', ec:'America/Guayaquil', ve:'America/Caracas',
+  cr:'America/Costa_Rica', pa:'America/Panama', cu:'America/Havana', do:'America/Santo_Domingo', pr:'America/Puerto_Rico', gt:'America/Guatemala',
+  ru:'Europe/Moscow', ua:'Europe/Kyiv', ge:'Asia/Tbilisi', am:'Asia/Yerevan', np:'Asia/Kathmandu', lk:'Asia/Colombo', mv:'Indian/Maldives',
+};
+function zonaDe(cc, lat, lng) {
+  cc = (cc || '').toLowerCase();
+  if (cc === 'us') return lng < -150 ? 'Pacific/Honolulu' : lng > -87 ? 'America/New_York' : lng > -101 ? 'America/Chicago' : lng > -115 ? 'America/Denver' : 'America/Los_Angeles';
+  if (cc === 'ca') return lng > -90 ? 'America/Toronto' : lng > -102 ? 'America/Winnipeg' : lng > -120 ? 'America/Edmonton' : 'America/Vancouver';
+  if (cc === 'mx') return lng > -88 ? 'America/Cancun' : lng < -114 ? 'America/Tijuana' : 'America/Mexico_City';
+  if (cc === 'br') return lng < -60 ? 'America/Manaus' : 'America/Sao_Paulo';
+  if (cc === 'au') return lng > 141 ? 'Australia/Sydney' : lng > 129 ? 'Australia/Adelaide' : 'Australia/Perth';
+  if (cc === 'id') return lng > 125 ? 'Asia/Jayapura' : lng > 115 ? 'Asia/Makassar' : 'Asia/Jakarta';
+  if (cc === 'cl' && lng < -100) return 'Pacific/Easter';
+  if (ZONA_PAIS[cc]) return ZONA_PAIS[cc];
+  if (lng == null || isNaN(lng)) return '';
+  const h = Math.round(lng / 15);
+  return h === 0 ? 'Etc/GMT' : 'Etc/GMT' + (h > 0 ? '-' : '+') + Math.abs(h);
+}
+function minutosUTC(tz, fecha) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).formatToParts(fecha).map(x => [x.type, x.value]));
+  return Math.round((Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second) - fecha.getTime()) / 6e4);
+}
+function diferenciaCasa(tz, s) {
+  try {
+    const f = s ? fd(s) : new Date(); f.setHours(12);
+    const dif = (minutosUTC(tz, f) - minutosUTC(ZONA_CASA, f)) / 60;
+    if (dif === 0) return `misma hora que ${NOMBRE_CASA}`;
+    const n = Math.abs(dif), txt = Number.isInteger(n) ? n : n.toFixed(1).replace('.', ',');
+    return `${txt} ${n === 1 ? 'hora' : 'horas'} ${dif > 0 ? 'más' : 'menos'} que ${NOMBRE_CASA}`;
+  } catch { return ''; }
+}
+const horaEn = tz => { try { return new Date().toLocaleTimeString('es-CL', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); } catch { return ''; } };
+const tzPedidos = new Set();
+async function asegurarZona(e) {
+  const u = e?.datos.ubicacion;
+  if (!u?.lat || u.tz || tzPedidos.has(e.id)) return;
+  tzPedidos.add(e.id);
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=3&lat=${u.lat}&lon=${u.lng}`);
+    const j = await r.json();
+    const tz = zonaDe(j.address?.country_code, u.lat, u.lng);
+    if (tz) await guardar('etapa', { ...e.datos, ubicacion: { ...u, tz } }, e.id);
+  } catch {}
+}
+function lineaHora(e, s, enVivo) {
+  const tz = e?.datos.ubicacion?.tz;
+  if (!tz) { if (e) asegurarZona(e); return ''; }
+  const dif = diferenciaCasa(tz, s);
+  return `🕐 ${enVivo ? `En ${esc(e.datos.ciudad)} son las <b>${horaEn(tz)}</b> (${dif})` : `En ${esc(e.datos.ciudad)}: ${dif}`}`;
+}
+
+/* ---------- Clima típico del mes del viaje ---------- */
+const NOMBRE_MES = fd(FECHA_MIN).toLocaleDateString('es-CL', { month: 'long' });
+const CLIMA = {};
+async function climaDelMes(lat, lng) {
+  const k = lat.toFixed(2) + ',' + lng.toFixed(2);
+  if (CLIMA[k]) return CLIMA[k];
+  try { const c = JSON.parse(leerLocal('clima:' + k) || 'null'); if (c) return (CLIMA[k] = c); } catch {}
+  const mes = FECHA_MIN.slice(5, 7), y = +FECHA_MIN.slice(0, 4);
+  const r = await fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lng}&start_date=${y - 3}-${mes}-01&end_date=${y - 2}-${mes}-28&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`);
+  const j = await r.json(), d = j.daily;
+  const idx = d.time.map((t, i) => t.slice(5, 7) === mes ? i : -1).filter(i => i >= 0);
+  if (!idx.length) throw new Error('sin datos');
+  const prom = arr => idx.reduce((s, i) => s + (arr[i] ?? 0), 0) / idx.length;
+  const anios = new Set(idx.map(i => d.time[i].slice(0, 4))).size;
+  const res = { max: Math.round(prom(d.temperature_2m_max)), min: Math.round(prom(d.temperature_2m_min)), lluvia: Math.round(idx.filter(i => (d.precipitation_sum[i] || 0) >= 1).length / anios * 30 / (idx.length / anios)) };
+  guardarLocal('clima:' + k, JSON.stringify(res));
+  return (CLIMA[k] = res);
+}
+function textoClima(c) {
+  const consejo = c.min <= 8 ? ' Lleven abrigo para las noches.' : c.max >= 28 ? ' Hace calor: ropa liviana y bloqueador.' : c.lluvia >= 10 ? ' Lleven paraguas o cortaviento.' : '';
+  return `🌤️ En ${NOMBRE_MES} suele haber entre ${c.min}° y ${c.max}°, con unos ${plural(c.lluvia, 'día', 'días')} de lluvia en el mes.${consejo}`;
+}
+const marcaClima = e => e?.datos.ubicacion?.lat ? `<span class="clima" data-clima="${e.datos.ubicacion.lat},${e.datos.ubicacion.lng}"></span>` : '';
+function completarAsync() {
+  document.querySelectorAll('[data-clima]').forEach(async el => {
+    const [lat, lng] = el.dataset.clima.split(',').map(Number);
+    try { const c = await climaDelMes(lat, lng); if (el.isConnected) el.textContent = textoClima(c); } catch { el.remove(); }
+  });
+}
+
+/* ---------- Monedas: todo convertido a la moneda principal ---------- */
+let TASAS = null, tasasPedidas = '';
+async function cargarTasas() {
+  const base = monedaBase();
+  if (tasasPedidas === base) return;
+  tasasPedidas = base;
+  try { const c = JSON.parse(leerLocal('tasas') || 'null'); if (c && c.base === base && Date.now() - c.t < 12 * 36e5) { TASAS = c; render(); return; } } catch {}
+  try {
+    const j = await (await fetch('https://open.er-api.com/v6/latest/' + base)).json();
+    if (j.result === 'success') { TASAS = { base, r: j.rates, t: Date.now() }; guardarLocal('tasas', JSON.stringify(TASAS)); render(); }
+  } catch {}
+}
+function aBase(v, mon) {
+  const base = monedaBase(); mon = (mon || base).toUpperCase();
+  if (mon === base) return v;
+  if (!TASAS || TASAS.base !== base || !TASAS.r[mon]) return null;
+  return v / TASAS.r[mon];
+}
+function totalBase(items, campo) {
+  let t = 0, ok = true, mixto = false;
+  for (const x of items) {
+    const v = Number(x.datos[campo]); if (!v) continue;
+    if ((x.datos.moneda || monedaBase()).toUpperCase() !== monedaBase()) mixto = true;
+    const c = aBase(v, x.datos.moneda); if (c == null) ok = false; else t += c;
+  }
+  return { t, ok, mixto };
+}
+function textoBase(items, campo) {
+  const r = totalBase(items, campo);
+  if (!r.ok) return textoTotales(sumarPorMoneda(items, campo));
+  return (r.mixto ? '≈ ' : '') + fMonto(r.t, monedaBase());
+}
+const equivalente = (v, mon) => { const c = aBase(Number(v), mon); return c != null && (mon || monedaBase()).toUpperCase() !== monedaBase() ? ` <span class="autor">≈ ${fMonto(c, monedaBase())}</span>` : ''; };
+
+/* ---------- Google Maps ---------- */
+function linkMaps(g, q, texto = 'Cómo llegar') {
+  const dest = g?.lat ? `${g.lat},${g.lng}` : q;
+  return dest ? `<a class="enlace" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}" target="_blank" rel="noopener">🧭 ${texto}</a>` : '';
 }
 
 const normal = s => (s || '').split(',')[0].trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -558,7 +780,7 @@ function alojamientoDeEtapa(e) {
    Vistas
    ========================================================= */
 const VISTAS = [
-  ['resumen', '🧭', 'Resumen'], ['recorrido', '🛤️', 'Recorrido'], ['alojamientos', '🛏️', 'Alojamientos'],
+  ['hoy', '☀️', 'Hoy'], ['resumen', '🧭', 'Resumen'], ['calendario', '📅', 'Calendario'], ['recorrido', '🛤️', 'Recorrido'], ['alojamientos', '🛏️', 'Alojamientos'],
   ['conexiones', '✈️', 'Conexiones'], ['mapa', '🗺️', 'Mapa'], ['ideas', '🎯', 'Panoramas'],
   ['gastos', '💸', 'Gastos'], ['checklist', '✅', 'Checklist'], ['ajustes', '⚙️', 'Ajustes'],
 ];
@@ -634,12 +856,11 @@ function vResumen() {
 
   // cifras
   const noches = etapas.reduce((s, e) => s + Math.max(0, dias(e.datos.llegada, e.datos.salida) || 0), 0);
-  const reservasTot = sumarPorMoneda([...alojActivos(), ...de('conexion')], 'precio');
   const cifras = `<ul class="cifras">
-    <li><b>${etapas.length}</b>${etapas.length === 1 ? 'parada' : 'paradas'}</li>
+    <li><b>${etapas.length}</b>${etapas.length === 1 ? 'destino' : 'destinos'}</li>
     <li><b>${noches}</b>noches</li>
     <li><b>${alojActivos().filter(confirmado).length}</b>alojamientos confirmados</li>
-    <li><b>${textoTotales(reservasTot)}</b>en reservas</li></ul>`;
+    <li><b>${textoBase([...alojActivos(), ...de('conexion'), ...de('lugar')], 'precio')}</b>en reservas y panoramas</li></ul>`;
 
   const eventos = eventosRecorrido(), linea = lineaRecorrido(eventos, false);
 
@@ -662,16 +883,21 @@ function tarjetaAlojamiento(a) {
   const porNoche = noch > 0 && d.precio ? ` (${fMonto(d.precio / noch, d.moneda)} por noche)` : '';
   return `<div class="tarjeta ${d.estado === 'Descartado' ? 'apagada' : ''}" data-editar="${a.id}">
     <div class="fila"><h4>🛏️ ${esc(d.nombre)}</h4><span class="estado ${esc(d.estado)}">${esc(d.estado || 'Evaluando')}</span></div>
-    <div class="meta">${d.entrada ? `<span>${fFecha(d.entrada)} a ${fFecha(d.salida)}, ${plural(noch, 'noche', 'noches')}</span>` : ''}${d.precio ? `<span class="monto">${fMonto(d.precio, d.moneda)}${porNoche}</span>` : ''}${d.codigo ? `<span>Reserva ${esc(d.codigo)}</span>` : ''}</div>
+    ${d.entrada || d.salida ? `<div class="horario-aloj">
+      <div><small>Check-in</small><strong>${d.horaEntrada || '—'}</strong><small>${fFecha(d.entrada, { weekday: 'short', day: 'numeric', month: 'short' })}</small></div>
+      <div class="tc-linea" style="--c:var(--mar)"><span>${noch > 0 ? plural(noch, 'noche', 'noches') : ''}</span></div>
+      <div class="der"><small>Check-out</small><strong>${d.horaSalida || '—'}</strong><small>${fFecha(d.salida, { weekday: 'short', day: 'numeric', month: 'short' })}</small></div></div>` : ''}
+    <div class="meta">${d.precio ? `<span class="monto">${fMonto(d.precio, d.moneda)}${porNoche}${equivalente(d.precio, d.moneda)}</span>` : ''}${d.codigo ? `<span>Reserva ${esc(d.codigo)}</span>` : ''}</div>
     ${d.direccion ? `<div class="meta">${esc(d.direccion)}</div>` : ''}
     ${d.notas ? `<div class="nota">${esc(d.notas)}</div>` : ''}
-    <div class="fila">${d.enlace ? enlace(d.enlace, 'Ver alojamiento') : '<span class="autor">Sin enlace todavía</span>'}${autorDe(a)}</div></div>`;
+    <div class="fila"><div class="enlaces">${d.enlace ? enlace(d.enlace, 'Ver alojamiento') : '<span class="autor">Sin enlace todavía</span>'}${linkMaps(d.ubicacion, [d.direccion || d.nombre, d.ciudad].filter(Boolean).join(', '))}</div>${autorDe(a)}</div></div>`;
 }
 
 function tarjetaLugar(l) {
   const d = l.datos, votos = d.votos || [], mio = votos.includes(st.yo);
   return `<div class="tarjeta ${d.visitado ? 'apagada' : ''}" data-editar="${l.id}">
-    <div class="fila"><h4>${ICONO_CAT[d.categoria] || '📍'} ${esc(d.nombre)}</h4>${enlace(d.enlace)}</div>
+    <div class="fila"><h4>${ICONO_CAT[d.categoria] || '📍'} ${esc(d.nombre)}</h4><div class="enlaces">${enlace(d.enlace)}${linkMaps(d.ubicacion, [d.nombre, d.ciudad].filter(Boolean).join(', '))}</div></div>
+    ${d.dia || d.precio ? `<div class="meta">${d.dia ? `<span>📅 ${fFecha(d.dia, { weekday: 'short', day: 'numeric', month: 'short' })}${d.momento ? ', ' + d.momento.toLowerCase() : ''}</span>` : ''}${d.precio ? `<span class="monto">${fMonto(d.precio, d.moneda)}${equivalente(d.precio, d.moneda)}</span>` : ''}</div>` : ''}
     ${d.notas ? `<div class="nota">${esc(d.notas)}</div>` : ''}
     <div class="acciones-tarjeta">
       <button class="pastilla" data-voto="${l.id}" aria-pressed="${mio}">❤️ ${votos.length}${votos.length ? ', ' + votos.map(esc).join(' y ') : ''}</button>
@@ -778,7 +1004,8 @@ function vDestino() {
     <section class="dest-hero"><span class="num grande">${idx + 1}</span>
       <div class="dh"><p>Destino ${idx + 1} de ${t.e.length}</p><h1>${esc(d.ciudad)}</h1>
         <p>${d.pais ? esc(d.pais) + '. ' : ''}${fFecha(d.llegada, { weekday: 'long', day: 'numeric', month: 'long' })} al ${fFecha(d.salida, { weekday: 'long', day: 'numeric', month: 'long' })}${noch ? `, ${plural(noch, 'noche', 'noches')}` : ''}</p>
-        ${d.enlace ? `<p>${enlace(d.enlace)}</p>` : ''}</div>
+        ${d.enlace ? `<p>${enlace(d.enlace)}</p>` : ''}
+        <div class="dh-extra">${lineaHora(e, d.llegada, false) ? `<span>${lineaHora(e, d.llegada, false)}</span>` : ''}${marcaClima(e)}</div></div>
       <button class="btn sec chico" data-editar="${e.id}">Editar destino</button></section>
     ${d.notas ? `<div class="nota-destino">${esc(d.notas)}</div>` : ''}
     <div class="dest-grid">
@@ -789,9 +1016,14 @@ function vDestino() {
         <section><div class="sub-titulo"><h3 class="grupo">Panoramas en ${esc(d.ciudad)}</h3><button class="btn sec chico" data-nuevo="lugar" ${pre({ ciudad: d.ciudad })}>＋ Panorama</button></div>
           ${pan.length ? orden.map(cat => `<h4 class="cat">${ICONO_CAT[cat] || '📍'} ${esc(cat)}</h4><div class="lista">${grupos[cat].map(tarjetaLugar).join('')}</div>`).join('')
             : `<div class="vacio chico">Agreguen lo que quieren ver, comer o hacer en ${esc(d.ciudad)}.</div>`}</section>
+        ${planDiaADia(e)}
+        ${presupuestoDestino(e, llegan)}
         <section><h3 class="grupo">Cómo siguen${sig ? ` hacia ${esc(sig.datos.ciudad)}` : ' (regreso)'}</h3>${conectorHTML(siguen, d.ciudad, sig?.datos.ciudad || '', d.salida)}</section>
       </div>
-      <aside class="dest-mapa"><div id="mapaDestino"></div><p class="autor">🛏️ Alojamiento &nbsp; 🎯 Panoramas. Toca un punto para ver el detalle.</p></aside>
+      <aside class="dest-mapa"><div class="chips-dia" role="group" aria-label="Ver en el mapa">
+          <button class="pastilla" data-dia-mapa="" aria-pressed="${!st.diaMapa}">Todo</button>
+          ${diasDe(e).map(s => `<button class="pastilla" data-dia-mapa="${s}" aria-pressed="${st.diaMapa === s}">${fFecha(s, { weekday: 'short', day: 'numeric' })}</button>`).join('')}</div>
+        <div id="mapaDestino"></div><p class="autor" id="leyendaMapaDestino">${st.diaMapa ? 'La línea muestra el orden del día, partiendo desde el alojamiento.' : '🛏️ Alojamiento y panoramas. Elijan un día para ver su recorrido.'}</p></aside>
     </div>`;
 }
 
@@ -799,25 +1031,184 @@ function dibujarMapaDestino() {
   const el = $('#mapaDestino'), e = porId(st.destino); if (!el || !e) return;
   mapa = L.map(el);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapa);
-  const pts = [], cMar = getComputedStyle(document.documentElement).getPropertyValue('--mar').trim();
-  const u = e.datos.ubicacion;
-  if (u?.lat) pts.push([u.lat, u.lng]);
-  alojamientoDeEtapa(e).forEach(a => {
+  const pts = [], css = getComputedStyle(document.documentElement);
+  const cMar = css.getPropertyValue('--mar').trim(), cRuta = css.getPropertyValue('--ruta').trim();
+  const dia = st.diaMapa, u = e.datos.ubicacion;
+  if (u?.lat && !dia) pts.push([u.lat, u.lng]);
+  const alojs = dia ? alojamientosDeNoche(dia, true).concat(alojamientosDeNoche(dia, true).length ? [] : alojamientoDeEtapa(e).slice(0, 1)) : alojamientoDeEtapa(e);
+  alojs.forEach(a => {
     const g = a.datos.ubicacion; if (!g?.lat) return; pts.push([g.lat, g.lng]);
     L.circleMarker([g.lat, g.lng], { radius: 10, color: '#fff', weight: 3, fillColor: cMar, fillOpacity: 1 })
       .bindTooltip('🛏️ ' + esc(a.datos.nombre), { direction: 'top', offset: [0, -8] })
-      .bindPopup(`<b>🛏️ ${esc(a.datos.nombre)}</b><br>${esc(a.datos.estado || '')}${a.datos.enlace ? '<br>' + enlace(a.datos.enlace, 'Ver alojamiento') : ''}`).addTo(mapa);
+      .bindPopup(`<b>🛏️ ${esc(a.datos.nombre)}</b><br>${esc(a.datos.estado || '')}${a.datos.enlace ? '<br>' + enlace(a.datos.enlace, 'Ver alojamiento') : ''}<br>${linkMaps(g)}`).addTo(mapa);
   });
-  panoramasDe(e.datos.ciudad).forEach(l => {
+  const lugares = dia ? panoramasDelDia(dia) : panoramasDe(e.datos.ciudad);
+  const ruta = dia && alojs[0]?.datos.ubicacion?.lat ? [[alojs[0].datos.ubicacion.lat, alojs[0].datos.ubicacion.lng]] : [];
+  lugares.forEach((l, i) => {
     const g = l.datos.ubicacion; if (!g?.lat) return; pts.push([g.lat, g.lng]);
-    L.marker([g.lat, g.lng], { icon: L.divIcon({ className: 'icono-medio' + (l.datos.visitado ? ' hecho' : ''), html: ICONO_CAT[l.datos.categoria] || '📍', iconSize: [30, 30] }) })
-      .bindTooltip(esc(l.datos.nombre), { direction: 'top', offset: [0, -14] })
-      .bindPopup(`<b>${esc(l.datos.nombre)}</b><br>❤️ ${(l.datos.votos || []).length}${l.datos.enlace ? '<br>' + enlace(l.datos.enlace) : ''}`).addTo(mapa);
+    if (dia) ruta.push([g.lat, g.lng]);
+    L.marker([g.lat, g.lng], { icon: dia ? L.divIcon({ className: 'num-mapa', html: String(i + 1), iconSize: [30, 30] }) : L.divIcon({ className: 'icono-medio' + (l.datos.visitado ? ' hecho' : ''), html: ICONO_CAT[l.datos.categoria] || '📍', iconSize: [30, 30] }) })
+      .bindTooltip(esc(l.datos.nombre), { direction: 'top', offset: [0, -14], permanent: !!dia })
+      .bindPopup(`<b>${esc(l.datos.nombre)}</b>${l.datos.momento ? '<br>' + l.datos.momento : ''}<br>❤️ ${(l.datos.votos || []).length}${l.datos.enlace ? '<br>' + enlace(l.datos.enlace) : ''}<br>${linkMaps(g)}`).addTo(mapa);
   });
+  if (ruta.length > 1) L.polyline(ruta, { color: cRuta, weight: 5, dashArray: '1 10', lineCap: 'round' }).addTo(mapa);
   if (pts.length > 1) mapa.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
-  else if (pts.length) mapa.setView(pts[0], 12);
+  else if (pts.length) mapa.setView(pts[0], dia ? 14 : 12);
+  else if (u?.lat) mapa.setView([u.lat, u.lng], 12);
   else mapa.setView([-20, -40], 2);
   setTimeout(() => mapa?.invalidateSize(), 50);
+}
+
+// ---------- Días del viaje ----------
+function rangoDias(a, b) { const r = []; if (!a || !b) return r; for (let d = fd(a); d <= fd(b); d = new Date(d.getTime() + DIA)) r.push(iso(d)); return r; }
+const diasViaje = () => { const { ini, fin } = rangoViaje(); return rangoDias(ini, fin); };
+const diasDe = e => rangoDias(e.datos.llegada, e.datos.salida);
+const etapaDeCiudad = c => etapasOrd().find(e => normal(e.datos.ciudad) === normal(c));
+function destinoDelDia(s) {
+  const e = etapasOrd();
+  return e.find(x => x.datos.llegada <= s && s < x.datos.salida) || e.find(x => x.datos.salida === s) || null;
+}
+const colorDe = e => e ? PALETA[Math.max(0, etapasOrd().findIndex(x => x.id === e.id)) % PALETA.length] : '';
+function opcionesDias() {
+  return [['', 'Sin día asignado'], ...diasViaje().map(s => { const e = destinoDelDia(s); return [s, fFecha(s, { weekday: 'short', day: 'numeric', month: 'short' }) + (e ? ' en ' + e.datos.ciudad : '')]; })];
+}
+function alojamientosDeNoche(s, soloConfirmados) {
+  return alojActivos().filter(a => a.datos.entrada && a.datos.salida && a.datos.entrada <= s && s < a.datos.salida && (!soloConfirmados || confirmado(a)))
+    .sort((a, b) => (confirmado(b) ? 1 : 0) - (confirmado(a) ? 1 : 0));
+}
+const ordenMomento = l => { const i = MOMENTOS.indexOf(l.datos.momento); return i < 0 ? 3 : i; };
+const panoramasDelDia = s => de('lugar').filter(l => l.datos.dia === s).sort((a, b) => ordenMomento(a) - ordenMomento(b) || (a.creado || '').localeCompare(b.creado || ''));
+
+function selectorDia(l) {
+  const e = etapaDeCiudad(l.datos.ciudad), dias_ = e ? diasDe(e) : diasViaje();
+  return `<select class="mini" data-asignar="${l.id}" aria-label="Día para ${esc(l.datos.nombre)}">
+    <option value="">Sin día</option>${dias_.map(s => `<option value="${s}" ${l.datos.dia === s ? 'selected' : ''}>${fFecha(s, { weekday: 'short', day: 'numeric', month: 'short' })}</option>`).join('')}</select>
+    <select class="mini" data-asignar-momento="${l.id}" aria-label="Momento"><option value="">Cualquier hora</option>${MOMENTOS.map(m => `<option ${l.datos.momento === m ? 'selected' : ''}>${m}</option>`).join('')}</select>`;
+}
+function filaPanorama(l, conSelector) {
+  const d = l.datos;
+  return `<div class="fila-pan ${d.visitado ? 'hecha' : ''}"><span class="fp-ico" aria-hidden="true">${ICONO_CAT[d.categoria] || '📍'}</span>
+    <div class="fp-txt" data-editar="${l.id}"><b>${esc(d.nombre)}</b>${d.momento && !conSelector ? `<small>${esc(d.momento)}</small>` : ''}</div>
+    <div class="fp-acc">${linkMaps(d.ubicacion, [d.nombre, d.ciudad].filter(Boolean).join(', '), 'Ir')}${conSelector ? selectorDia(l) : ''}</div></div>`;
+}
+
+function planDiaADia(e) {
+  const d = e.datos, pan = panoramasDe(d.ciudad), sinDia = pan.filter(l => !l.datos.dia);
+  if (!pan.length) return '';
+  return `<section><h3 class="grupo">Plan día a día</h3>
+    <p class="autor">Asignen cada panorama a un día y momento. En el mapa pueden ver el recorrido de cada día.</p>
+    <div class="plan">${diasDe(e).map(s => {
+      const lista = panoramasDelDia(s);
+      return `<div class="plan-dia"><div class="pd-cab"><b>${fFecha(s, { weekday: 'long', day: 'numeric', month: 'short' })}</b>
+        <span class="pd-acc"><button class="enlace-titulo" data-dia-mapa="${s}">Ver en el mapa</button><button class="enlace-titulo" data-abrir-dia="${s}">Abrir día ›</button></span></div>
+        ${lista.length ? lista.map(l => filaPanorama(l, true)).join('') : '<p class="autor">Día libre.</p>'}</div>`;
+    }).join('')}</div>
+    ${sinDia.length ? `<h4 class="cat">Todavía sin día</h4><div class="plan-dia">${sinDia.map(l => filaPanorama(l, true)).join('')}</div>` : ''}</section>`;
+}
+
+function presupuestoDestino(e, llegan) {
+  const d = e.datos, base = monedaBase();
+  const al = alojamientoDeEtapa(e)[0];
+  const reservas = [...(al ? [al] : []), ...llegan, ...panoramasDe(d.ciudad)];
+  const gastos = de('gasto').filter(g => normal(g.datos.destino) === normal(d.ciudad));
+  const est = totalBase(reservas, 'precio'), gas = totalBase(gastos, 'monto'), pres = Number(d.presupuesto) || 0;
+  if (!est.t && !gas.t && !pres) return '';
+  const pct = pres ? Math.min(100, Math.round(gas.t / pres * 100)) : 0;
+  return `<section><h3 class="grupo">Presupuesto en ${esc(d.ciudad)}</h3><div class="balance">
+    ${pres ? `<div class="barra" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%;background:${gas.t > pres ? 'var(--alerta)' : 'var(--ok)'}"></span></div>
+      <p>Gastado <b>${fMonto(gas.t, base)}</b> de <b>${fMonto(pres, base)}</b>${gas.t > pres ? ' <span style="color:var(--alerta)">(se pasaron)</span>' : `, quedan ${fMonto(pres - gas.t, base)}`}.</p>`
+      : `<p class="autor">Pueden ponerle un presupuesto a este destino con "Editar destino".</p>`}
+    ${est.t ? `<p>Alojamiento, llegada y panoramas: <b>${textoBase(reservas, 'precio')}</b></p>` : ''}
+    ${gas.t ? `<p>Gastos registrados aquí: <b>${textoBase(gastos, 'monto')}</b></p>` : ''}</div></section>`;
+}
+
+// ---------- Detalle de un día (lo usan Calendario y Hoy) ----------
+function detalleDia(s, enVivo) {
+  const e = destinoDelDia(s), lista = diasViaje(), n = lista.indexOf(s) + 1, color = colorDe(e) || 'var(--suave)';
+  const cx = conexOrd().filter(x => (x.datos.sale || '').slice(0, 10) === s);
+  const noche = alojamientosDeNoche(s), salen = alojActivos().filter(a => a.datos.salida === s && confirmado(a));
+  const pan = panoramasDelDia(s);
+  const ultimo = s === lista.at(-1);
+  const pendientes = e ? panoramasDe(e.datos.ciudad).filter(l => !l.datos.dia) : [];
+  const porMomento = {};
+  pan.forEach(l => (porMomento[l.datos.momento || 'A cualquier hora'] ||= []).push(l));
+  const hora = lineaHora(e, s, enVivo);
+  return `<div class="dia-detalle" style="--c:${color}">
+    <div class="dia-cab"><div><p>${n ? `Día ${n} de ${lista.length}` : 'Fuera de las fechas del viaje'}</p>
+      <h2>${fFecha(s, { weekday: 'long', day: 'numeric', month: 'long' })}</h2>
+      ${e ? `<button class="enlace-titulo destino-dia" data-destino="${e.id}">📍 ${esc(e.datos.ciudad)} ›</button>` : ''}</div>
+      <div class="dia-extra">${hora ? `<span>${hora}</span>` : ''}${marcaClima(e)}</div></div>
+    ${cx.length ? `<h3 class="grupo">Traslados</h3>${conectorHTML(cx)}` : ''}
+    <h3 class="grupo">Dónde duermen</h3>
+    ${salen.map(a => `<div class="aviso info">🧳 Check-out de <b>${esc(a.datos.nombre)}</b>${a.datos.horaSalida ? ` a las <b>${a.datos.horaSalida}</b>` : ''}.</div>`).join('')}
+    ${noche.length ? noche.slice(0, 1).map(a => `<div class="tarjeta aloj-dia" data-editar="${a.id}">
+        <div class="fila"><h4>🛏️ ${esc(a.datos.nombre)}</h4><span class="estado ${esc(a.datos.estado)}">${esc(a.datos.estado)}</span></div>
+        ${a.datos.entrada === s ? `<div class="meta"><span>Check-in hoy${a.datos.horaEntrada ? ` desde las <b>${a.datos.horaEntrada}</b>` : ''}</span></div>` : ''}
+        ${a.datos.direccion ? `<div class="meta">${esc(a.datos.direccion)}</div>` : ''}
+        <div class="enlaces">${linkMaps(a.datos.ubicacion, [a.datos.direccion || a.datos.nombre, a.datos.ciudad].filter(Boolean).join(', '))}${enlace(a.datos.enlace, 'Ver alojamiento')}</div></div>`).join('')
+      : ultimo ? '<p class="autor">Último día: vuelta a casa. 🏠</p>'
+      : `<div class="vacio chico">Falta alojamiento para esta noche.<br><button class="btn sec chico" data-nuevo="alojamiento" ${pre({ ciudad: e?.datos.ciudad || '', entrada: s, salida: e?.datos.salida || '' })}>＋ Agregar alojamiento</button></div>`}
+    <div class="sub-titulo"><h3 class="grupo">Plan del día</h3><button class="btn sec chico" data-nuevo="lugar" ${pre({ ciudad: e?.datos.ciudad || '', dia: s })}>＋ Panorama</button></div>
+    ${pan.length ? [...MOMENTOS, 'A cualquier hora'].filter(m => porMomento[m]).map(m => `<h4 class="cat">${m}</h4><div class="plan-dia">${porMomento[m].map(l => filaPanorama(l, false)).join('')}</div>`).join('')
+      : '<p class="autor">No hay panoramas para este día.</p>'}
+    ${pendientes.length ? `<details class="pendientes"><summary>${plural(pendientes.length, 'panorama', 'panoramas')} de ${esc(e.datos.ciudad)} sin día asignado</summary><div class="plan-dia">${pendientes.map(l => filaPanorama(l, true)).join('')}</div></details>` : ''}
+  </div>`;
+}
+
+function vCalendario() {
+  const lista = diasViaje(), hoy = iso(new Date());
+  if (!st.diaCal) st.diaCal = lista.includes(hoy) ? hoy : (lista[0] || FECHA_MIN);
+  const meses = [];
+  for (let d = fd(FECHA_MIN.slice(0, 8) + '01'); d <= fd(FECHA_MAX); d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) meses.push(new Date(d));
+  const etapas = etapasOrd();
+  const mesHTML = m => {
+    const y = m.getFullYear(), mo = m.getMonth(), ultimo = new Date(y, mo + 1, 0).getDate();
+    const vacios = (new Date(y, mo, 1).getDay() + 6) % 7;
+    let celdas = Array.from({ length: vacios }, () => '<div class="cal-vacio"></div>');
+    for (let dd = 1; dd <= ultimo; dd++) {
+      const s = iso(new Date(y, mo, dd)), e = destinoDelDia(s), enViaje = lista.includes(s);
+      const iconos = [
+        ...conexOrd().filter(x => (x.datos.sale || '').slice(0, 10) === s).map(x => ICONO_MEDIO[x.datos.medio] || '🧳'),
+        ...alojActivos().filter(a => a.datos.entrada === s).slice(0, 1).map(() => '🛏️'),
+      ];
+      const np = panoramasDelDia(s).length;
+      const inicio = e && (e.datos.llegada === s || (new Date(y, mo, dd).getDay() === 1) || dd === 1);
+      celdas.push(`<button class="cal-dia ${enViaje ? '' : 'fuera'} ${st.diaCal === s ? 'sel' : ''} ${s === hoy ? 'hoy' : ''}" data-dia="${s}" ${e && enViaje ? `style="--c:${colorDe(e)}"` : ''} aria-label="${fFecha(s, { weekday: 'long', day: 'numeric', month: 'long' })}${e ? ', ' + esc(e.datos.ciudad) : ''}">
+        <span class="cd-num">${dd}</span>${inicio && enViaje ? `<span class="cd-ciudad">${esc(e.datos.ciudad)}</span>` : ''}
+        <span class="cd-ico">${iconos.join('')}${np ? `<span class="cd-pan">🎯${np}</span>` : ''}</span></button>`);
+    }
+    return `<section class="mes"><h3 class="grupo">${m.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' })}</h3>
+      <div class="cal"><div class="cal-sem">lun</div><div class="cal-sem">mar</div><div class="cal-sem">mié</div><div class="cal-sem">jue</div><div class="cal-sem">vie</div><div class="cal-sem">sáb</div><div class="cal-sem">dom</div>${celdas.join('')}</div></section>`;
+  };
+  return encabezado('Calendario', 'Cada color es un destino. Toquen un día para ver qué pasa ese día.') +
+    `<div class="cal-wrap"><div>${meses.map(mesHTML).join('')}
+      <div class="cal-leyenda">${etapas.map(e => `<button class="chip-dest" data-destino="${e.id}" style="--c:${colorDe(e)}"><i></i>${esc(e.datos.ciudad)}</button>`).join('')}
+        <span class="autor">✈️ traslado &nbsp; 🛏️ check-in &nbsp; 🎯 panoramas</span></div></div>
+      <div>${detalleDia(st.diaCal, st.diaCal === hoy)}</div></div>`;
+}
+
+function vHoy() {
+  const lista = diasViaje(), hoy = iso(new Date());
+  if (!lista.length) return encabezado('Hoy', 'Lo importante de cada día del viaje.') + vacio('Agreguen los destinos con sus fechas para armar esta pantalla.', 'etapa', 'Agregar destino');
+  const enViaje = lista.includes(hoy);
+  if (!st.diaHoy || !lista.includes(st.diaHoy)) st.diaHoy = enViaje ? hoy : lista[0];
+  const s = st.diaHoy, i = lista.indexOf(s);
+  const prox = conexOrd().find(x => x.datos.sale && new Date(x.datos.sale) > new Date());
+  let cuenta = '';
+  if (prox) {
+    const ms = new Date(prox.datos.sale) - new Date(), dd = Math.floor(ms / DIA), hh = Math.floor(ms % DIA / 36e5), mm = Math.floor(ms % 36e5 / 6e4);
+    cuenta = `<div class="proximo" data-editar="${prox.id}"><span class="burbuja" aria-hidden="true">${ICONO_MEDIO[prox.datos.medio] || '🧳'}</span>
+      <div><small>Próximo traslado</small><b>${esc(prox.datos.desde)} → ${esc(prox.datos.hasta)}</b><span>${fHora(prox.datos.sale)}</span></div>
+      <div class="cuenta-prox"><strong>${dd ? dd + ' d ' + hh + ' h' : hh ? hh + ' h ' + mm + ' min' : mm + ' min'}</strong><small>faltan</small></div></div>`;
+  }
+  const aviso = enViaje ? (s !== hoy ? `<div class="aviso info">Estás viendo otro día. <button class="btn chico sec" data-hoy-dia="${hoy}">Volver a hoy</button></div>` : '')
+    : hoy < lista[0] ? `<div class="aviso info">El viaje empieza en ${plural(dias(hoy, lista[0]), 'día', 'días')}. Así se va a ver esta pantalla cada día del viaje.</div>`
+    : `<div class="aviso info">El viaje ya terminó. Pueden revisar cada día con las flechas.</div>`;
+  return encabezado(enViaje && s === hoy ? 'Hoy' : 'Día a día', '') + cuenta + aviso +
+    `<div class="nav-dia"><button class="btn sec chico" data-hoy-dia="${lista[i - 1] || ''}" ${i > 0 ? '' : 'disabled'}>← Día anterior</button>
+      <span>${fFecha(s, { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+      <button class="btn sec chico" data-hoy-dia="${lista[i + 1] || ''}" ${i < lista.length - 1 ? '' : 'disabled'}>Día siguiente →</button></div>` +
+    detalleDia(s, enViaje && s === hoy);
 }
 
 function vAlojamientos() {
@@ -864,9 +1255,19 @@ function vGastos() {
   const [v1, v2] = viajeros();
   let balance = '';
   if (lista.length) {
-    const tot = sumarPorMoneda(lista, 'monto');
-    const lineas = [`<p>Total gastado: <b>${textoTotales(tot)}</b></p>`];
-    if (v1 && v2) {
+    const tot = sumarPorMoneda(lista, 'monto'), tb = totalBase(lista, 'monto');
+    const lineas = [`<p>Total gastado: <b>${textoBase(lista, 'monto')}</b>${tb.ok && tb.mixto ? ` <span class="autor">(${textoTotales(tot)})</span>` : ''}</p>`];
+    if (v1 && v2 && tb.ok) {
+      const base = monedaBase(), pag = { [v1]: 0, [v2]: 0 }; let saldo = 0;
+      for (const g of lista) {
+        const x = aBase(Number(g.datos.monto) || 0, g.datos.moneda) || 0, p = g.datos.pagadoPor;
+        if (p in pag) pag[p] += x;
+        if (g.datos.compartido === 'No') continue;
+        if (p === v1) saldo += x / 2; else if (p === v2) saldo -= x / 2;
+      }
+      lineas.push(`<p>${esc(v1)} pagó ${fMonto(pag[v1], base)} y ${esc(v2)} pagó ${fMonto(pag[v2], base)}. ${Math.abs(saldo) < 1 ? '<b>Están a mano.</b>' : `<b>${esc(saldo > 0 ? v2 : v1)} le debe ${tb.mixto ? '≈ ' : ''}${fMonto(Math.abs(saldo), base)} a ${esc(saldo > 0 ? v1 : v2)}.</b>`}</p>`);
+      if (tb.mixto) lineas.push(`<p class="autor">Los montos en otras monedas están convertidos a ${base} con el tipo de cambio de hoy.</p>`);
+    } else if (v1 && v2) {
       for (const m of Object.keys(tot)) {
         let saldo = 0; // positivo: v2 le debe a v1
         const pag = { [v1]: 0, [v2]: 0 };
@@ -884,8 +1285,8 @@ function vGastos() {
   return encabezado('Gastos', 'Lo que ya pagaron, y quién lo pagó.', 'gasto', 'Gasto') + balance +
     (lista.length ? `<div class="lista">${lista.map(g => {
       const d = g.datos;
-      return `<div class="tarjeta" data-editar="${g.id}"><div class="fila"><h4>${esc(d.concepto)}</h4><span class="monto">${fMonto(d.monto, d.moneda)}</span></div>
-        <div class="meta">${d.fecha ? `<span>${fFecha(d.fecha)}</span>` : ''}${d.categoria ? `<span>${esc(d.categoria)}</span>` : ''}${d.pagadoPor ? `<span>Pagó ${esc(d.pagadoPor)}</span>` : ''}${d.compartido === 'No' ? '<span>No se divide</span>' : ''}</div></div>`;
+      return `<div class="tarjeta" data-editar="${g.id}"><div class="fila"><h4>${esc(d.concepto)}</h4><span class="monto">${fMonto(d.monto, d.moneda)}${equivalente(d.monto, d.moneda)}</span></div>
+        <div class="meta">${d.fecha ? `<span>${fFecha(d.fecha)}</span>` : ''}${d.categoria ? `<span>${esc(d.categoria)}</span>` : ''}${d.destino ? `<span>📍 ${esc(d.destino)}</span>` : ''}${d.pagadoPor ? `<span>Pagó ${esc(d.pagadoPor)}</span>` : ''}${d.compartido === 'No' ? '<span>No se divide</span>' : ''}</div></div>`;
     }).join('')}</div>` : vacio('Aún no hay gastos registrados.', 'gasto', 'Agregar gasto'));
 }
 
@@ -1025,7 +1426,7 @@ function dibujarMapa() {
   alojActivos().forEach(a => {
     const u = a.datos.ubicacion; if (!u?.lat) return; puntos.push([u.lat, u.lng]);
     L.circleMarker([u.lat, u.lng], { radius: 8, color: '#fff', weight: 2, fillColor: cMar, fillOpacity: 1 })
-      .bindPopup(`<b>🛏️ ${esc(a.datos.nombre)}</b><br>${esc(a.datos.estado || '')}${a.datos.entrada ? '<br>' + fFecha(a.datos.entrada) + ' a ' + fFecha(a.datos.salida) : ''}${a.datos.enlace ? '<br>' + enlace(a.datos.enlace, 'Ver alojamiento') : ''}`).addTo(mapa);
+      .bindPopup(`<b>🛏️ ${esc(a.datos.nombre)}</b><br>${esc(a.datos.estado || '')}${a.datos.entrada ? `<br>Check-in ${fFecha(a.datos.entrada)}${a.datos.horaEntrada ? ', ' + a.datos.horaEntrada : ''}<br>Check-out ${fFecha(a.datos.salida)}${a.datos.horaSalida ? ', ' + a.datos.horaSalida : ''}` : ''}${a.datos.enlace ? '<br>' + enlace(a.datos.enlace, 'Ver alojamiento') : ''}`).addTo(mapa);
   });
   de('lugar').forEach(l => {
     const u = l.datos.ubicacion; if (!u?.lat) return;
@@ -1080,7 +1481,7 @@ function dibujarMapa() {
 function render() {
   detenerRepro();
   if (mapa) { mapa.remove(); mapa = null; }
-  const vistas = { destino: vDestino, resumen: vResumen, recorrido: vRecorrido, alojamientos: vAlojamientos, conexiones: vConexiones, mapa: vMapa, ideas: vIdeas, gastos: vGastos, checklist: vChecklist, ajustes: vAjustes };
+  const vistas = { hoy: vHoy, calendario: vCalendario, destino: vDestino, resumen: vResumen, recorrido: vRecorrido, alojamientos: vAlojamientos, conexiones: vConexiones, mapa: vMapa, ideas: vIdeas, gastos: vGastos, checklist: vChecklist, ajustes: vAjustes };
   const c = conf();
   document.title = c.nombre;
   $('#raiz').innerHTML = `<div class="app">
@@ -1090,6 +1491,8 @@ function render() {
     <main id="principal" class="${st.vista === 'mapa' ? 'ancho' : ''}">${vistas[st.vista]()}</main></div>`;
   if (st.vista === 'mapa') dibujarMapa();
   if (st.vista === 'destino') dibujarMapaDestino();
+  completarAsync();
+  if (!TASAS || TASAS.base !== monedaBase()) cargarTasas();
   const fc = $('#formConfig');
   if (fc) prepararForm(fc, 'config', itemConfig());
   const tr = $('#tareaRapida');
@@ -1115,15 +1518,16 @@ function campoHTML(c, v) {
     return `<div class="campo ancho"><span>${esc(c.l)}</span>
       <div class="geo"><input id="${id}" name="${c.k}_q" value="${esc(g.q || '')}" placeholder="Se completa solo al guardar, o búscalo aquí" aria-label="${esc(c.l)}">
       <button type="button" class="btn sec chico" data-buscar-geo="${c.k}">Buscar</button></div>
-      <input type="hidden" name="${c.k}_lat" value="${g.lat ?? ''}"><input type="hidden" name="${c.k}_lng" value="${g.lng ?? ''}"><input type="hidden" name="${c.k}_nom" value="${esc(g.nombre || '')}">
+      <input type="hidden" name="${c.k}_lat" value="${g.lat ?? ''}"><input type="hidden" name="${c.k}_lng" value="${g.lng ?? ''}"><input type="hidden" name="${c.k}_nom" value="${esc(g.nombre || '')}"><input type="hidden" name="${c.k}_tz" value="${esc(g.tz || '')}">
       <p class="geo-res" data-geo-res="${c.k}">${g.lat ? '📍 ' + esc(g.nombre || 'Ubicación guardada') : 'Sin ubicación todavía.'}</p></div>`;
   }
   let input;
   if (c.t === 'textarea') input = `<textarea id="${id}" name="${c.k}" rows="3" placeholder="${esc(c.ph || '')}">${esc(val)}</textarea>`;
   else if (c.t === 'select') {
     const ops = typeof c.op === 'function' ? c.op() : c.op;
-    const todas = val && !ops.includes(val) ? [...ops, val] : ops;
-    input = `<select id="${id}" name="${c.k}">${todas.map(o => `<option ${o === val ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+    const pares = ops.map(o => Array.isArray(o) ? o : [o, o]);
+    if (val && !pares.some(([v]) => v === val)) pares.push([val, val]);
+    input = `<select id="${id}" name="${c.k}">${pares.map(([v, t]) => `<option value="${esc(v)}" ${v === val ? 'selected' : ''}>${esc(t || '—')}</option>`).join('')}</select>`;
   } else {
     input = `<input id="${id}" name="${c.k}" type="${c.t || 'text'}" value="${esc(val)}" placeholder="${esc(c.ph || '')}" ${c.t === 'number' ? 'step="any" inputmode="decimal"' : ''} ${c.req ? 'required' : ''} ${c.t === 'date' && !c.libre ? `min="${FECHA_MIN}" max="${FECHA_MAX}"` : ''} ${c.t === 'datetime-local' ? `min="${FECHA_MIN}T00:00" max="${FECHA_MAX}T23:59"` : ''} ${c.lista ? `list="dl_${c.k}" autocomplete="off"` : ''}>`;
     if (c.lista) input += `<datalist id="dl_${c.k}">${[...new Set(etapasOrd().map(e => e.datos.ciudad).filter(Boolean))].map(x => `<option value="${esc(x)}">`).join('')}</datalist>`;
@@ -1136,7 +1540,7 @@ function leerForm(form, tipo) {
   for (const c of TIPOS[tipo].campos) {
     if (c.t === 'geo') {
       const lat = parseFloat(f.get(c.k + '_lat')), lng = parseFloat(f.get(c.k + '_lng'));
-      out[c.k] = { q: (f.get(c.k + '_q') || '').trim(), lat: isNaN(lat) ? null : lat, lng: isNaN(lng) ? null : lng, nombre: f.get(c.k + '_nom') || '' };
+      out[c.k] = { q: (f.get(c.k + '_q') || '').trim(), lat: isNaN(lat) ? null : lat, lng: isNaN(lng) ? null : lng, nombre: f.get(c.k + '_nom') || '', tz: f.get(c.k + '_tz') || '' };
     } else if (c.t === 'number') { const v = f.get(c.k); out[c.k] = v === '' || v == null ? '' : Number(v); }
     else out[c.k] = (f.get(c.k) || '').trim();
   }
@@ -1152,13 +1556,13 @@ function prepararForm(form, tipo, item) {
     const res = form.querySelector(`[data-geo-res="${k}"]`);
     res.textContent = 'Buscando…';
     const g = await geocodificar(q);
-    if (g) { form[k + '_lat'].value = g.lat; form[k + '_lng'].value = g.lng; form[k + '_nom'].value = g.nombre; res.textContent = '📍 ' + g.nombre; }
+    if (g) { form[k + '_lat'].value = g.lat; form[k + '_lng'].value = g.lng; form[k + '_nom'].value = g.nombre; form[k + '_tz'].value = g.tz || ''; res.textContent = '📍 ' + g.nombre; }
     else res.textContent = 'No se encontró. Prueba agregando la ciudad o el país.';
   }));
   // si cambian el texto, la ubicación anterior deja de valer
   form.querySelectorAll('input[name$="_q"]').forEach(inp => inp.addEventListener('input', () => {
     const k = inp.name.slice(0, -2);
-    form[k + '_lat'].value = ''; form[k + '_lng'].value = ''; form[k + '_nom'].value = '';
+    form[k + '_lat'].value = ''; form[k + '_lng'].value = ''; form[k + '_nom'].value = ''; form[k + '_tz'].value = '';
     form.querySelector(`[data-geo-res="${k}"]`).textContent = 'Se buscará al guardar.';
   }));
   form.addEventListener('submit', async ev => {
@@ -1215,10 +1619,21 @@ function abrirForm(tipo, item, previo) {
    ========================================================= */
 document.addEventListener('click', async ev => {
   if (ev.target.closest('a')) return;
-  const t = ev.target.closest('[data-ir],[data-destino],[data-nuevo],[data-voto],[data-alternar],[data-sugeridas],[data-cambiar-yo],[data-respaldo],[data-salir],[data-editar]');
+  const t = ev.target.closest('[data-dia],[data-hoy-dia],[data-dia-mapa],[data-abrir-dia],[data-ir],[data-destino],[data-nuevo],[data-voto],[data-alternar],[data-sugeridas],[data-cambiar-yo],[data-respaldo],[data-salir],[data-editar]');
   if (!t || t.closest('dialog')) return;
   const ds = t.dataset;
-  if (ds.destino) { st.destino = ds.destino; st.vista = 'destino'; st.mapaVista = null; render(); window.scrollTo(0, 0); }
+  if (ds.dia) { st.diaCal = ds.dia; render(); if (window.innerWidth <= 1000) $('.dia-detalle')?.scrollIntoView({ behavior: 'smooth' }); }
+  else if (ds.hoyDia !== undefined) { if (ds.hoyDia) { st.diaHoy = ds.hoyDia; render(); } }
+  else if (ds.abrirDia) { st.diaCal = ds.abrirDia; st.vista = 'calendario'; render(); window.scrollTo(0, 0); }
+  else if (ds.diaMapa !== undefined) {
+    st.diaMapa = ds.diaMapa;
+    document.querySelectorAll('.chips-dia [data-dia-mapa]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.diaMapa === st.diaMapa)));
+    const ley = $('#leyendaMapaDestino'); if (ley) ley.textContent = st.diaMapa ? 'La línea muestra el orden del día, partiendo desde el alojamiento.' : '🛏️ Alojamiento y panoramas. Elijan un día para ver su recorrido.';
+    if (mapa) { mapa.remove(); mapa = null; }
+    dibujarMapaDestino();
+    if (window.innerWidth <= 1000) $('#mapaDestino')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  else if (ds.destino) { if (st.destino !== ds.destino) st.diaMapa = ''; st.destino = ds.destino; st.vista = 'destino'; st.mapaVista = null; render(); window.scrollTo(0, 0); }
   else if (ds.ir) { if (st.vista !== ds.ir) st.mapaVista = null; st.vista = ds.ir; render(); window.scrollTo(0, 0); }
   else if (ds.nuevo) { let p = null; try { p = ds.pre ? JSON.parse(ds.pre) : null; } catch {} abrirForm(ds.nuevo, null, p); }
   else if (ds.voto) {
@@ -1244,6 +1659,13 @@ document.addEventListener('click', async ev => {
     guardarLocal('viaje-clave', null); location.reload();
   }
   else if (ds.editar) { const it = porId(ds.editar); if (it) abrirForm(it.tipo, it); }
+});
+document.addEventListener('change', async ev => {
+  const s = ev.target.closest('[data-asignar],[data-asignar-momento]'); if (!s) return;
+  const it = porId(s.dataset.asignar || s.dataset.asignarMomento); if (!it) return;
+  s.disabled = true;
+  const campo = s.dataset.asignar ? 'dia' : 'momento';
+  if (await guardar('lugar', { ...it.datos, [campo]: s.value }, it.id)) toast(campo === 'dia' ? (s.value ? 'Asignado al ' + fFecha(s.value, { weekday: 'long', day: 'numeric' }) : 'Quitado del plan') : 'Momento guardado');
 });
 document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('.destino-card')) { ev.preventDefault(); ev.target.click(); } });
 $('#dlg').addEventListener('click', ev => { if (ev.target.id === 'dlg') $('#dlg').close(); });
@@ -1289,6 +1711,7 @@ async function iniciar() {
   const { data, error } = await sb.from('items').select('*').order('creado');
   if (error) { pantallaClave('No se pudieron cargar los datos: ' + error.message); return; }
   st.items = data || [];
+  if (diasViaje().includes(iso(new Date()))) st.vista = 'hoy';
   escucharCambios();
   if (!st.yo) pantallaQuienSoy(); else render();
 }
