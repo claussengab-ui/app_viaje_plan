@@ -1,6 +1,5 @@
-// Pega aquí los datos de tu proyecto de Supabase
-// (Supabase → Project Settings → API Keys)
+// Datos de conexión con Supabase
 window.CONFIG = {
-  SUPABASE_URL: "https://TU-PROYECTO.supabase.co",
-  SUPABASE_KEY: "PEGA-AQUI-LA-PUBLISHABLE-KEY"
+  SUPABASE_URL: "https://fhzwkbzdotryactbtczo.supabase.co",
+  SUPABASE_KEY: "sb_publishable_OZIsLOahvF3ZBCz0FPuZFw_hhkHjNOY"
 };
