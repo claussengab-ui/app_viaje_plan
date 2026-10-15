@@ -167,6 +167,27 @@ main.ancho{max-width:none}
   .panel-mapa{height:auto;min-height:0}
 }
 .num-mapa{background:var(--ruta);color:#1A1405;border:3px solid #fff;border-radius:50%;width:30px!important;height:30px!important;display:grid;place-items:center;font:800 14px 'Bricolage Grotesque',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.num-mapa.nivel-ok{box-shadow:0 0 0 3px #2A8253,0 1px 6px rgba(0,0,0,.4)}
+.num-mapa.nivel-parcial{box-shadow:0 0 0 3px #E07B00,0 1px 6px rgba(0,0,0,.4)}
+.num-mapa.nivel-falta{box-shadow:0 0 0 3px #C2412D,0 1px 6px rgba(0,0,0,.4)}
+.num-mapa.nivel-ok::after,.num-mapa.nivel-parcial::after,.num-mapa.nivel-falta::after{position:absolute;top:-9px;right:-9px;width:16px;height:16px;border-radius:50%;border:2px solid #fff;color:#fff;font:800 10px/16px system-ui,sans-serif;text-align:center}
+.num-mapa.nivel-ok::after{content:"✓";background:#2A8253}
+.num-mapa.nivel-parcial::after{content:"!";background:#E07B00}
+.num-mapa.nivel-falta::after{content:"✕";background:#C2412D}
+.mini-num.nivel-ok{background:#2A8253;color:#fff}.mini-num.nivel-parcial{background:#E07B00;color:#fff}.mini-num.nivel-falta{background:#C2412D;color:#fff}
+.popup-ficha .leaflet-popup-content{margin:12px 14px}
+.ficha{font:14px/1.4 'Atkinson Hyperlegible',system-ui,sans-serif;color:#1A2632}
+.ficha-cab{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.ficha-cab b{font:800 1.15rem 'Bricolage Grotesque',sans-serif;display:block}
+.ficha-cab small{color:#5A6B7C}
+.ficha-num{width:28px;height:28px;border-radius:50%;background:#E2A60E;color:#1A1405;display:grid;place-items:center;font:800 13px 'Bricolage Grotesque',sans-serif;flex:none}
+.ficha ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.ficha li{display:grid;grid-template-columns:22px 1fr;gap:6px;align-items:start}
+.ficha li b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:#5A6B7C}
+.ficha li i{color:#5A6B7C;font-style:normal}
+.ficha-pie{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;padding:8px 10px;border-radius:10px;background:#FBEDE8}
+.ficha-pie.nivel-ok{background:#E7F4EC}.ficha-pie.nivel-parcial{background:#FDF0DC}
+.ficha-pie .btn{background:#16324F;color:#fff}
 .icono-medio{background:#fff;border-radius:50%;display:grid!important;place-items:center;font-size:16px;box-shadow:0 1px 5px rgba(0,0,0,.35)}
 .leaflet-tooltip.etiqueta{background:rgba(255,255,255,.92);border:0;box-shadow:0 1px 3px rgba(0,0,0,.25);font:700 13px 'Bricolage Grotesque',sans-serif;color:#16324F;padding:2px 8px}
 .leaflet-tooltip.etiqueta.suave{font-weight:600;color:#5A6B7C}
@@ -968,7 +989,7 @@ function destinoCard(e, n) {
     <span class="num">${n}</span>
     <div class="dc"><h3>${esc(d.ciudad)}</h3>
       <p>${d.pais ? esc(d.pais) + '. ' : ''}${fFecha(d.llegada, { weekday: 'short', day: 'numeric', month: 'short' })} a ${fFecha(d.salida, { weekday: 'short', day: 'numeric', month: 'short' })}</p>
-      <div class="chips">${noch ? `<span class="noches">${plural(noch, 'noche', 'noches')}</span>` : ''}${chipAl}<span class="chip">🎯 ${plural(pan.length, 'panorama', 'panoramas')}</span></div></div>
+      <div class="chips">${noch ? `<span class="noches">${plural(noch, 'noche', 'noches')}</span>` : ''}${(() => { const s = estadoDestino(e); return `<span class="chip ${s.nivel === 'ok' ? 'ok' : s.nivel === 'falta' ? 'alerta' : ''}">${MARCA[s.nivel]} ${s.listos === 3 ? 'Todo listo' : s.listos + ' de 3 listos'}</span>`; })()}${chipAl}<span class="chip">🎯 ${plural(pan.length, 'panorama', 'panoramas')}</span></div></div>
     <span class="flecha" aria-hidden="true">›</span></article>`;
 }
 
@@ -1057,6 +1078,50 @@ function dibujarMapaDestino() {
   else if (u?.lat) mapa.setView([u.lat, u.lng], 12);
   else mapa.setView([-20, -40], 2);
   setTimeout(() => mapa?.invalidateSize(), 50);
+}
+
+// ---------- Estado de cada destino: ¿qué está listo? ----------
+const reservado = x => x.datos.estado === 'Reservado' || x.datos.estado === 'Pagado';
+const estadoTramos = l => !l.length ? 'falta' : l.every(reservado) ? 'ok' : 'parcial';
+function estadoDestino(e, t = tramosRecorrido()) {
+  const idx = t.e.findIndex(x => x.id === e.id), d = e.datos;
+  const llegan = (idx === 0 ? t.ida : t.entre[idx]) || [], siguen = (idx === t.e.length - 1 ? t.regreso : t.entre[idx + 1]) || [];
+  const noches = rangoDias(d.llegada, d.salida).slice(0, -1);
+  const al = alojamientoDeEtapa(e);
+  const cubiertas = noches.filter(s => alojamientosDeNoche(s, true).length).length;
+  const aloj = !noches.length || cubiertas === noches.length ? 'ok' : cubiertas || al.length ? 'parcial' : 'falta';
+  const items = [aloj, estadoTramos(llegan), estadoTramos(siguen)];
+  const listos = items.filter(x => x === 'ok').length;
+  return { idx, llegan, siguen, al, noches: noches.length, cubiertas, aloj, llega: items[1], sale: items[2], listos,
+    nivel: listos === 3 ? 'ok' : items.includes('falta') ? 'falta' : 'parcial' };
+}
+const MARCA = { ok: '✅', parcial: '⚠️', falta: '❌' };
+function textoTramos(l, dir) {
+  if (!l.length) return dir === 'llega' ? 'Sin definir cómo llegan' : 'Sin definir cómo siguen';
+  return l.map(x => {
+    const d = x.datos, serv = nombreServicio(d);
+    return `${ICONO_MEDIO[d.medio] || '🧳'} ${serv || esc(d.medio || 'Traslado')} ${dir === 'llega' ? 'desde ' + esc(d.desde) : 'a ' + esc(d.hasta)}, ${hora(d.sale) ? diaCorto(d.sale) + ' ' + hora(d.sale) : 'sin hora'} <i>(${esc(d.estado || 'Por reservar')})</i>`;
+  }).join('<br>');
+}
+function fichaDestino(e, t) {
+  const d = e.datos, s = estadoDestino(e, t), pan = panoramasDe(d.ciudad), conDia = pan.filter(l => l.datos.dia).length;
+  const best = s.al[0];
+  const alTxt = !s.noches ? 'No duermen aquí'
+    : s.aloj === 'ok' ? `${esc(best?.datos.nombre || 'Reservado')} <i>(${esc(best?.datos.estado || '')})</i>${best?.datos.horaEntrada ? `<br>Check-in ${best.datos.horaEntrada}${best.datos.horaSalida ? ', check-out ' + best.datos.horaSalida : ''}` : ''}`
+    : s.cubiertas ? `Faltan ${plural(s.noches - s.cubiertas, 'noche', 'noches')} por reservar`
+    : s.al.length ? `${plural(s.al.length, 'opción', 'opciones')} en evaluación, nada reservado` : 'Falta alojamiento';
+  const tz = d.ubicacion?.tz;
+  return `<div class="ficha">
+    <div class="ficha-cab"><span class="ficha-num">${s.idx + 1}</span><div><b>${esc(d.ciudad)}</b>
+      <small>${fFecha(d.llegada, { weekday: 'short', day: 'numeric', month: 'short' })} → ${fFecha(d.salida, { weekday: 'short', day: 'numeric', month: 'short' })}, ${plural(s.noches, 'noche', 'noches')}</small></div></div>
+    <ul>
+      <li>${MARCA[s.aloj]}<div><b>Alojamiento</b><span>${alTxt}</span></div></li>
+      <li>${MARCA[s.llega]}<div><b>Llegada</b><span>${textoTramos(s.llegan, 'llega')}</span></div></li>
+      <li>${MARCA[s.sale]}<div><b>Salida</b><span>${textoTramos(s.siguen, 'sale')}</span></div></li>
+      <li>🎯<div><b>Panoramas</b><span>${pan.length ? `${pan.length} en total, ${conDia} con día asignado` : 'Todavía ninguno'}</span></div></li>
+      ${tz ? `<li>🕐<div><b>Hora</b><span>${diferenciaCasa(tz, d.llegada)}</span></div></li>` : ''}
+    </ul>
+    <div class="ficha-pie nivel-${s.nivel}"><b>${s.listos === 3 ? 'Todo listo' : `${s.listos} de 3 listos`}</b><button class="btn chico" data-destino="${e.id}">Ver destino ›</button></div></div>`;
 }
 
 // ---------- Alojamiento → destino automático ----------
@@ -1370,6 +1435,7 @@ function vMapa() {
   const ev = eventosRecorrido();
   const leyenda = `<div class="leyenda">
     <span><b class="mini-num">1</b>Destino (en orden)</span>
+    <span><b class="mini-num nivel-ok">✓</b>Todo listo</span><span><b class="mini-num nivel-parcial">!</b>Falta reservar algo</span><span><b class="mini-num nivel-falta">✕</b>Falta alojamiento o traslado</span>
     ${Object.entries(ESTILO_MEDIO).filter(([m]) => de('conexion').some(x => x.datos.medio === m)).map(([m, s]) =>
       `<span><svg width="34" height="10" aria-hidden="true"><line x1="2" y1="5" x2="32" y2="5" stroke="${s.color}" stroke-width="3" stroke-dasharray="${s.dashArray || ''}" stroke-linecap="round"/></svg>${ICONO_MEDIO[m]} ${m}</span>`).join('')}
     <span><svg width="34" height="10" aria-hidden="true"><line x1="2" y1="5" x2="32" y2="5" stroke="#9AA6B2" stroke-width="2" stroke-dasharray="3 5"/></svg>Traslado sin definir</span>
@@ -1378,7 +1444,7 @@ function vMapa() {
     `<div class="mapa-wrap"><div id="mapa"></div>
       <aside class="panel-mapa" aria-label="Recorrido paso a paso">
         ${ev.length ? `<button class="btn pri ancho" id="reproducir">▶ Recorrer el viaje paso a paso</button>
-          <p class="autor">Toca un destino o un traslado para verlo en el mapa.</p>
+          <p class="autor">Pasa el cursor (o toca) un destino en el mapa para ver qué está listo.</p>
           <ol class="metro">${lineaRecorrido(ev, true)}</ol>`
         : `<p>El mapa se arma solo a medida que agregan paradas y conexiones.</p><button class="btn pri" data-nuevo="etapa">＋ Agregar destino</button>`}
       </aside></div>${leyenda}`;
@@ -1410,17 +1476,19 @@ function dibujarMapa() {
   const numDe = {};
   eventosRecorrido().forEach(e => { if (e.e) numDe[e.e.id] = e.n; });
 
-  // Paradas numeradas con su nombre siempre visible
-  const ciudadesConMarca = new Set();
+  // Destinos numerados con su nombre siempre visible; al pasar el cursor, su ficha
+  const ciudadesConMarca = new Set(), tramosTodos = tramosRecorrido();
+  const conHover = matchMedia('(hover: hover)').matches;
   etapas.forEach(e => {
     const u = e.datos.ubicacion; if (!u?.lat) return;
     const d = e.datos, n = numDe[e.id], p = [u.lat, u.lng], noch = Math.max(0, dias(d.llegada, d.salida) || 0);
-    const al = alojamientoDeEtapa(e)[0];
     ciudadesConMarca.add(normal(d.ciudad)); puntos.push(p);
-    const m = L.marker(p, { icon: L.divIcon({ className: 'num-mapa', html: String(n), iconSize: [30, 30] }), zIndexOffset: 1000 })
-      .bindTooltip(esc(d.ciudad), { permanent: true, direction: 'right', offset: [14, 0], className: 'etiqueta' })
-      .bindPopup(`<b>${n}. ${esc(d.ciudad)}</b><br>${fFecha(d.llegada)} a ${fFecha(d.salida)} (${plural(noch, 'noche', 'noches')})${al ? `<br>🛏️ ${esc(al.datos.nombre)}${al.datos.enlace ? '<br>' + enlace(al.datos.enlace, 'Ver alojamiento') : ''}` : ''}${d.enlace ? '<br>' + enlace(d.enlace) : ''}<br><button class="btn sec chico" data-destino="${e.id}" style="margin-top:6px">Ver destino ›</button>`)
+    const nivel = estadoDestino(e, tramosTodos).nivel;
+    const m = L.marker(p, { icon: L.divIcon({ className: 'num-mapa nivel-' + nivel, html: String(n), iconSize: [30, 30] }), zIndexOffset: 1000, title: '' })
+      .bindTooltip(esc(d.ciudad), { permanent: true, direction: 'right', offset: [16, 0], className: 'etiqueta' })
+      .bindPopup(fichaDestino(e, tramosTodos), { maxWidth: 320, minWidth: 260, autoPan: !conHover, className: 'popup-ficha' })
       .addTo(mapa);
+    if (conHover) m.on('mouseover', () => m.openPopup());
     focos[e.id] = { centro: p, zoom: 12, capa: m };
   });
 
@@ -1436,9 +1504,10 @@ function dibujarMapa() {
     const linea = L.polyline(pts, { ...s, opacity: .9 }).addTo(mapa);
     const medio = s.arco ? pts[Math.floor(pts.length / 2)] : [(a.lat + b.lat) / 2, (a.lng + b.lng) / 2];
     const serv = nombreServicio(d);
-    const popup = `<b>${ICONO_MEDIO[d.medio] || '🧳'} ${esc(d.desde)} → ${esc(d.hasta)}</b>${serv ? '<br>' + serv : ''}<br>Sale ${fHora(d.sale)}${d.llega ? '<br>Llega ' + fHora(d.llega) : ''}${d.codigo ? '<br>Reserva ' + esc(d.codigo) : ''}${d.enlace ? '<br>' + enlace(d.enlace) : ''}`;
-    const icono = L.marker(medio, { icon: L.divIcon({ className: 'icono-medio', html: ICONO_MEDIO[d.medio] || '🧳', iconSize: [30, 30] }), zIndexOffset: 500 }).bindPopup(popup).addTo(mapa);
-    linea.bindPopup(popup);
+    const popup = `<b>${ICONO_MEDIO[d.medio] || '🧳'} ${esc(d.desde)} → ${esc(d.hasta)}</b><br>${reservado(x) ? '✅' : '⚠️'} ${esc(d.estado || 'Por reservar')}${serv ? '<br>' + serv : ''}<br>Sale ${fHora(d.sale)}${d.llega ? '<br>Llega ' + fHora(d.llega) : ''}${d.codigo ? '<br>Reserva ' + esc(d.codigo) : ''}${d.enlace ? '<br>' + enlace(d.enlace) : ''}`;
+    const icono = L.marker(medio, { icon: L.divIcon({ className: 'icono-medio', html: ICONO_MEDIO[d.medio] || '🧳', iconSize: [30, 30] }), zIndexOffset: 500 }).bindPopup(popup, { autoPan: !conHover }).addTo(mapa);
+    linea.bindPopup(popup, { autoPan: !conHover });
+    if (conHover) { icono.on('mouseover', () => icono.openPopup()); linea.on('mouseover', ev => linea.openPopup(ev.latlng)); }
     puntos.push([a.lat, a.lng], [b.lat, b.lng]);
     // ciudades de origen o destino que no son paradas (por ejemplo, la casa)
     for (const [c, nom] of [[a, d.desde], [b, d.hasta]]) {
