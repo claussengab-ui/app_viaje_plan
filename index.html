@@ -271,6 +271,21 @@ h4.cat{margin:14px 0 8px;font-size:1rem;color:var(--suave)}
 .icono-medio.hecho{opacity:.5}
 .panel-mapa .estacion{padding-right:6px}
 
+/* Tarjetas tipo "boleto": fondo blanco y borde marcado, también en modo oscuro */
+.tarjeta,.tramo-card,.plan-dia,.tarea,.destino-card{border-width:2px}
+.tramo-card{border-left-width:8px}
+.dia-detalle .tarjeta{border-left:8px solid var(--mar)}
+@media (prefers-color-scheme: dark){
+  .tarjeta,.tramo-card,.plan-dia,.tarea,.destino-card{
+    --superficie:#FFFFFF; --elevada:#FFFFFF; --fondo:#FFFFFF; --papel:#EDF1F5; --texto:#1A2632; --suave:#4F6072; --linea:#C3CED9;
+    --mar:#1A6E8C; --ok:#237548; --alerta:#B5391F; --ruta:#E2A60E; --fondo-alerta:#FBEDE8; --fondo-ok:#E3F3E9; --fondo-mar:#E0EFF5;
+    color:var(--texto); color-scheme:light; box-shadow:0 4px 18px rgba(0,0,0,.45);
+  }
+  .tarjeta,.plan-dia,.tarea,.destino-card{background:#FFFFFF}
+  .tramo-card{background:#FFFFFF;border-color:color-mix(in srgb,var(--c) 60%,#C3CED9)}
+  .tarjeta:hover{border-color:var(--mar)}
+}
+
 /* Gastos en el resumen */
 .gastos-res{display:grid;gap:14px;margin-bottom:8px}
 .gastos-res .balance{margin:0}
