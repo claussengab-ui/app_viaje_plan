@@ -270,6 +270,35 @@ h4.cat{margin:14px 0 8px;font-size:1rem;color:var(--suave)}
 .icono-medio.hecho{opacity:.5}
 .panel-mapa .estacion{padding-right:6px}
 
+/* Gastos en el resumen */
+.gastos-res{display:grid;gap:14px;margin-bottom:8px}
+.gastos-res .balance{margin:0}
+.cifras-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cifras-g>div{background:var(--superficie);border:1px solid var(--linea);border-radius:14px;padding:14px 16px;display:grid;gap:2px}
+.cifras-g small{color:var(--suave);font-weight:700}
+.cifras-g strong{font:800 1.5rem/1.15 'Bricolage Grotesque',sans-serif}
+.cifras-g span{color:var(--suave);font-size:.85rem}
+.cifras-g .destacado{background:var(--cab);color:var(--cab-t);border-color:var(--cab)}
+.cifras-g .destacado small,.cifras-g .destacado span{color:var(--cab-t);opacity:.8}
+.cifras-g .destacado strong{color:var(--ruta)}
+@media (max-width:620px){.cifras-g{grid-template-columns:1fr}}
+.barras{display:grid;gap:8px}
+.barra-fila{display:grid;grid-template-columns:minmax(110px,170px) 1fr auto;gap:10px;align-items:center}
+.barra-fila[data-destino]{cursor:pointer;border-radius:8px}
+.barra-fila[data-destino]:hover .bf-nom{color:var(--mar)}
+.bf-nom{font-weight:700;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bf-nom i{width:10px;height:10px;border-radius:50%;flex:none}
+.bf-barra{position:relative;height:14px;background:var(--papel);border-radius:999px}
+.bf-barra>span{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+.bf-barra>.bf-pres{border-right:3px dotted var(--texto);border-radius:0;background:transparent;top:-4px;bottom:-4px}
+.bf-monto{font-weight:700;text-align:right;white-space:nowrap;display:grid}
+.bf-monto small{color:var(--suave);font-weight:400}
+@media (max-width:520px){.barra-fila{grid-template-columns:1fr auto}.bf-barra{grid-column:1/-1;grid-row:2}}
+.fila-gasto{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--linea);cursor:pointer}
+.fila-gasto:first-of-type{border-top:0}
+.fila-gasto span{display:grid}
+.fila-gasto small{color:var(--suave)}
+
 /* Calendario */
 .cal-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:start}
 @media (max-width:1000px){.cal-wrap{grid-template-columns:1fr}}
@@ -849,6 +878,69 @@ function lineaRecorrido(eventos, enMapa) {
   }).join('');
 }
 
+function barras(filas, base) {
+  const max = Math.max(...filas.map(f => f[1]), 1);
+  return `<div class="barras">${filas.filter(f => f[1] > 0).map(([nombre, v, color]) => `<div class="barra-fila"><span class="bf-nom">${nombre}</span>
+    <span class="bf-barra"><span style="width:${Math.max(3, Math.round(v / max * 100))}%;background:${color || 'var(--mar)'}"></span></span><span class="bf-monto">${fMonto(v, base)}</span></div>`).join('')}</div>`;
+}
+
+function resumenGastos() {
+  const base = monedaBase();
+  const alojConf = alojActivos().filter(confirmado), conex = de('conexion'), pan = de('lugar').filter(l => Number(l.datos.precio)), gastos = de('gasto');
+  const tieneAlgo = [...alojConf, ...conex, ...pan].some(x => Number(x.datos.precio)) || gastos.length;
+  const cab = `<div class="titulo"><div><h2>Gastos del viaje</h2></div><button class="btn sec" data-ir="gastos">Ver todos los gastos ›</button></div>`;
+  if (!tieneAlgo) return cab + `<div class="vacio chico">Todavía no hay precios ni gastos. Pongan el precio en los alojamientos y conexiones, o registren un gasto.<br><button class="btn pri" data-nuevo="gasto">＋ Agregar gasto</button></div>`;
+  const cA = totalBase(alojConf, 'precio'), cT = totalBase(conex, 'precio'), cP = totalBase(pan, 'precio'), cG = totalBase(gastos, 'monto');
+  const planificado = cA.t + cT.t + cP.t, total = planificado + cG.t;
+  const reservas = [...alojConf, ...conex].filter(x => Number(x.datos.precio));
+  const pagado = totalBase(reservas.filter(x => x.datos.estado === 'Pagado'), 'precio').t, aPagar = cA.t + cT.t;
+  const pctPag = aPagar ? Math.round(pagado / aPagar * 100) : 0;
+  const sinConvertir = !(cA.ok && cT.ok && cP.ok && cG.ok);
+  const enEval = alojActivos().filter(a => !confirmado(a) && Number(a.datos.precio)).length;
+
+  // por categoría: lo planificado + los gastos registrados por su categoría
+  const porCat = {};
+  for (const g of gastos) { const c = g.datos.categoria || 'Otros', v = aBase(Number(g.datos.monto) || 0, g.datos.moneda); if (v != null) porCat[c] = (porCat[c] || 0) + v; }
+  const colores = ['#8E5BC7', '#D9672E', '#B5487A', '#3D6FD8', '#7A8794', '#2A8253', '#C2412D'];
+  const filasCat = [['🛏️ Alojamientos', cA.t, '#1F7A99'], ['✈️ Traslados', cT.t, '#E2A60E'], ['🎯 Panoramas', cP.t, '#2A8253'],
+    ...Object.entries(porCat).sort((a, b) => b[1] - a[1]).map(([c, v], i) => ['💳 ' + esc(c), v, colores[i % colores.length]])];
+
+  // por destino, sin contar dos veces una misma cosa si la ciudad se repite
+  const t = tramosRecorrido(), usados = new Set();
+  const filasDest = t.e.map((e, i) => {
+    const d = e.datos, llegan = i === 0 ? [] : (t.entre[i] || []); // el vuelo de ida es del viaje, no del destino
+    const cosas = [...alojamientoDeEtapa(e).filter(confirmado), ...llegan, ...panoramasDe(d.ciudad).filter(l => Number(l.datos.precio))].filter(x => !usados.has(x.id));
+    const gs = gastos.filter(g => normal(g.datos.destino) === normal(d.ciudad) && !usados.has(g.id));
+    [...cosas, ...gs].forEach(x => usados.add(x.id));
+    const v = totalBase(cosas, 'precio').t + totalBase(gs, 'monto').t, pres = Number(d.presupuesto) || 0;
+    return { e, v, pres, color: colorDe(e) };
+  }).filter(f => f.v || f.pres);
+
+  return cab + `<div class="gastos-res">
+    <div class="cifras-g">
+      <div><small>Planificado</small><strong>${fMonto(planificado, base)}</strong><span>alojamientos, traslados y panoramas</span></div>
+      <div><small>Otros gastos</small><strong>${fMonto(cG.t, base)}</strong><span>${plural(gastos.length, 'gasto registrado', 'gastos registrados')}</span></div>
+      <div class="destacado"><small>Total del viaje</small><strong>${fMonto(total, base)}</strong><span>${viajeros().length === 2 ? `${fMonto(total / 2, base)} por persona` : 'para los dos'}</span></div>
+    </div>
+    ${aPagar ? `<div class="balance"><h3>Reservas pagadas</h3>
+      <div class="barra"><span style="width:${pctPag}%;background:var(--ok)"></span></div>
+      <p>Ya pagaron <b>${fMonto(pagado, base)}</b> de ${fMonto(aPagar, base)} en alojamientos y traslados.${aPagar - pagado > 0 ? ` Falta pagar <b>${fMonto(aPagar - pagado, base)}</b>.` : ' <b>Todo pagado.</b>'}</p>
+      <p class="autor">Se cuenta como pagado lo que tiene el estado "Pagado".</p></div>` : ''}
+    <div class="balance"><h3>En qué se va la plata</h3>${barras(filasCat, base)}</div>
+    ${filasDest.length ? `<div class="balance"><h3>Por destino</h3><div class="barras">${filasDest.map(f => {
+      const ref = Math.max(...filasDest.map(x => Math.max(x.v, x.pres)), 1);
+      return `<div class="barra-fila" data-destino="${f.e.id}" role="button" tabindex="0"><span class="bf-nom"><i style="background:${f.color}"></i>${esc(f.e.datos.ciudad)}</span>
+        <span class="bf-barra">${f.pres ? `<span class="bf-pres" style="width:${Math.round(f.pres / ref * 100)}%"></span>` : ''}<span style="width:${Math.max(3, Math.round(f.v / ref * 100))}%;background:${f.pres && f.v > f.pres ? 'var(--alerta)' : f.color}"></span></span>
+        <span class="bf-monto">${fMonto(f.v, base)}${f.pres ? `<small>de ${fMonto(f.pres, base)}</small>` : ''}</span></div>`;
+    }).join('')}</div><p class="autor">La línea punteada es el presupuesto de cada destino (si lo pusieron).</p></div>` : ''}
+    ${gastos.length ? `<div class="balance"><h3>Cuentas claras</h3>${cuentasClaras(gastos)}</div>` : ''}
+    ${gastos.length ? `<div class="balance"><h3>Últimos gastos</h3>${gastos.sort((a, b) => (b.datos.fecha || b.creado || '').localeCompare(a.datos.fecha || a.creado || '')).slice(0, 4).map(g =>
+      `<div class="fila-gasto" data-editar="${g.id}"><span>${esc(g.datos.concepto)}<small>${[g.datos.fecha ? fFecha(g.datos.fecha) : '', g.datos.pagadoPor ? 'pagó ' + esc(g.datos.pagadoPor) : ''].filter(Boolean).join(', ')}</small></span><b>${fMonto(g.datos.monto, g.datos.moneda)}</b></div>`).join('')}
+      <button class="btn sec chico" data-nuevo="gasto" style="margin-top:10px">＋ Agregar gasto</button></div>` : ''}
+    <p class="autor">💡 Para no contar dos veces: en Gastos registren lo que no esté como alojamiento, traslado o panorama (comidas, seguro, compras…).${enEval ? ` Los ${plural(enEval, 'alojamiento', 'alojamientos')} en evaluación no se suman.` : ''}${sinConvertir ? ' Algunos montos en otra moneda no se pudieron convertir (revisen la conexión a internet).' : ''}</p>
+  </div>`;
+}
+
 function vResumen() {
   const c = conf(), { ini, fin } = rangoViaje(), etapas = etapasOrd();
   let cifra = '—', leyenda = 'Agrega las fechas en Ajustes';
@@ -888,7 +980,8 @@ function vResumen() {
   return `<section class="boleto"><div class="izq"><h1>${esc(c.nombre)}</h1><p>${rango}${viajeros().length ? '<br>' + viajeros().map(esc).join(' y ') : ''}</p></div>
     <div class="der"><div class="cifra">${cifra}</div><span>${leyenda}</span></div></section>
     ${cifras}<div class="avisos">${avisos.join('')}</div>
-    <div class="titulo"><div><h2>El recorrido</h2></div><button class="btn sec" data-nuevo="etapa">＋ Destino</button></div>
+    ${resumenGastos()}
+    <div class="titulo" style="margin-top:32px"><div><h2>El recorrido</h2></div><button class="btn sec" data-nuevo="etapa">＋ Destino</button></div>
     ${etapas.length || eventos.length ? `<ol class="metro">${linea}</ol>` : vacio('Agrega el primer destino del viaje para dibujar el recorrido.', 'etapa', 'Agregar destino')}`;
 }
 
@@ -1350,13 +1443,10 @@ function vIdeas() {
   return cab + html;
 }
 
-function vGastos() {
-  const lista = de('gasto').sort((a, b) => (b.datos.fecha || '').localeCompare(a.datos.fecha || ''));
+function cuentasClaras(lista) {
   const [v1, v2] = viajeros();
-  let balance = '';
-  if (lista.length) {
-    const tot = sumarPorMoneda(lista, 'monto'), tb = totalBase(lista, 'monto');
-    const lineas = [`<p>Total gastado: <b>${textoBase(lista, 'monto')}</b>${tb.ok && tb.mixto ? ` <span class="autor">(${textoTotales(tot)})</span>` : ''}</p>`];
+  const tot = sumarPorMoneda(lista, 'monto'), tb = totalBase(lista, 'monto');
+  const lineas = [];
     if (v1 && v2 && tb.ok) {
       const base = monedaBase(), pag = { [v1]: 0, [v2]: 0 }; let saldo = 0;
       for (const g of lista) {
@@ -1380,7 +1470,15 @@ function vGastos() {
         lineas.push(`<p>${esc(v1)} pagó ${fMonto(pag[v1], m)} y ${esc(v2)} pagó ${fMonto(pag[v2], m)}. ${Math.abs(saldo) < 0.01 ? '<b>Están a mano.</b>' : `<b>${esc(saldo > 0 ? v2 : v1)} le debe ${fMonto(Math.abs(saldo), m)} a ${esc(saldo > 0 ? v1 : v2)}.</b>`}</p>`);
       }
     } else lineas.push('<p class="autor">Escriban sus nombres en Ajustes para ver cuánto le debe uno al otro.</p>');
-    balance = `<div class="balance"><h3>Cuentas claras</h3>${lineas.join('')}</div>`;
+  return lineas.join('');
+}
+
+function vGastos() {
+  const lista = de('gasto').sort((a, b) => (b.datos.fecha || '').localeCompare(a.datos.fecha || ''));
+  let balance = '';
+  if (lista.length) {
+    const tot = sumarPorMoneda(lista, 'monto'), tb = totalBase(lista, 'monto');
+    balance = `<div class="balance"><h3>Cuentas claras</h3><p>Total gastado: <b>${textoBase(lista, 'monto')}</b>${tb.ok && tb.mixto ? ` <span class="autor">(${textoTotales(tot)})</span>` : ''}</p>${cuentasClaras(lista)}</div>`;
   }
   return encabezado('Gastos', 'Lo que ya pagaron, y quién lo pagó.', 'gasto', 'Gasto') + balance +
     (lista.length ? `<div class="lista">${lista.map(g => {
@@ -1775,7 +1873,7 @@ document.addEventListener('change', async ev => {
   const campo = s.dataset.asignar ? 'dia' : 'momento';
   if (await guardar('lugar', { ...it.datos, [campo]: s.value }, it.id)) toast(campo === 'dia' ? (s.value ? 'Asignado al ' + fFecha(s.value, { weekday: 'long', day: 'numeric' }) : 'Quitado del plan') : 'Momento guardado');
 });
-document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('.destino-card')) { ev.preventDefault(); ev.target.click(); } });
+document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('.destino-card,.barra-fila[data-destino]')) { ev.preventDefault(); ev.target.click(); } });
 $('#dlg').addEventListener('click', ev => { if (ev.target.id === 'dlg') $('#dlg').close(); });
 
 /* =========================================================
